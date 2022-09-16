@@ -37,16 +37,16 @@ public class AppReview : MonoBehaviour
     IEnumerator review()
     {
 
-        #if UNITY_ANDROID 
+        #if UNITY_ANDROID
 
         yield return new WaitForSeconds(0.1f);
-        //DebugLog.Log("\nInfo1 requestFlowOperation");
+        DebugLog.Log("\nInfo1 requestFlowOperation");
 
         var requestFlowOperation = _reviewManager.RequestReviewFlow();
        // DebugLog.Log("\nInfo2 requestFlowOperation");
         yield return requestFlowOperation;
-         //DebugLog.Log("\nInfo3 requestFlowOperation");
-       if (requestFlowOperation.Error != ReviewErrorCode.NoError)
+         DebugLog.Log("\nInfo3 requestFlowOperation");
+        if (requestFlowOperation.Error != ReviewErrorCode.NoError)
         {
             // Log error. For example, using requestFlowOperation.Error.ToString().
 
@@ -54,11 +54,11 @@ public class AppReview : MonoBehaviour
             //DebugLog.Log("\nError in requestFlowOperation1 " + requestFlowOperation.Error.ToString());
             yield break;
         }
-        //DebugLog.Log("\nInfo4 requestFlowOperation");
+        DebugLog.Log("\nInfo4 requestFlowOperation");
         _playReviewInfo = requestFlowOperation.GetResult();
          //DebugLog.Log("\nInfo5 requestFlowOperation");
         var launchFlowOperation = _reviewManager.LaunchReviewFlow(_playReviewInfo);
-         //DebugLog.Log("\nInfo6 requestFlowOperation");
+         DebugLog.Log("\nInfo6 requestFlowOperation");
         yield return launchFlowOperation;
         _playReviewInfo = null; // Reset the object
         if (launchFlowOperation.Error != ReviewErrorCode.NoError)

@@ -117,7 +117,7 @@ public class RatingManager : MonoBehaviour {
         #if UNITY_ANDROID
             androidReview();
 
-        Application.OpenURL("market://details?id=" + gameIdAndroid);
+        //Application.OpenURL("market://details?id=" + gameIdAndroid);
          #endif
 
         yield return new WaitForSeconds(.3f);

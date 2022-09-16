@@ -20,7 +20,7 @@ public class ShareScript : MonoBehaviour  {
 
     string getAndroidLink() {
         //return "tinyurl.com/callbreak";
-        return "https://play.google.com/store/apps/details?id=com.datgames.spades";
+        return "https://play.google.com/store/apps/details?id=com.datgames.spade";
 
     }
 

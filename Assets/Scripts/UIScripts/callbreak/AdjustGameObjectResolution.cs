@@ -43,7 +43,6 @@ public class AdjustGameObjectResolution {
 
             Debug.Log("deviceAspect" + deviceAspect + "xAspect: " + xAspect + " yAspect: " + yAspect + ", cardAspect " + cardAspect + " cardAspectSmall: " + cardAspectSmall);
             GameObject.Find("activePlayerCards").transform.localScale = new Vector3( 1/cardAspect, 1/cardAspectSmall, 1f);
-                        GameObject.Find("passcardparent").transform.localScale = new Vector3( 1/cardAspect, 1/cardAspectSmall, 1f);
 
             GameObject.Find("playedCard").transform.localScale = new Vector3(1/cardAspect, 1/cardAspectSmall, 1f);
             multiplyLocalScale(GameObject.Find("achievementparent") ,new Vector3(1/yAspect, 1/yAspect, 1f) );

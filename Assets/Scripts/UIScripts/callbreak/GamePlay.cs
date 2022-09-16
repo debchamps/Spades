@@ -12,7 +12,7 @@ using System.Collections.Generic;
 public class GamePlay : MonoBehaviour {
 
 
-    public static GameVariant GAME_VARIANT = GameVariant.BRAY;
+    public static GameVariant GAME_VARIANT = GameVariant.HEARTS;
 
     public AudioSource playCardAudio;
     public AudioSource roundWonAudio;
@@ -1066,21 +1066,7 @@ public class GamePlay : MonoBehaviour {
 
     }
 
-    /*
 
-    public static void updatePassCard(SpadeGameState gameState) {
-        //update all bid.    
-        //updateBid(gameState);
-        GameObject.Find("showlasthandbutton").GetComponent<ShowLastHand>().disableButton();
-        GameObject.Find("passcardparent/cardCombo1/bkg").transform.DOScale(GameObject.Find("testCard1").transform.localScale, 0f);
-
-        GameObject.Find("ScriptEmpty").GetComponent<PassBoxScript>().show();
-
-        //GameObject.Find("passcardparent").transform.position = new Vector3(Screen.width/2, Screen.height/2, 1f);
-
-
-    }
-    */
 
     public static void updateBidStart(SpadeGameState gameState) {
 

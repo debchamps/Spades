@@ -1,6 +1,6 @@
     public class BraySettingsKey {
         public static string SOUND_ENABLED = "BraySoundEnabled";
-        public static string MUSIC_ENABLED = "BrayMusicEnabled";
+        public static string MUSIC_ENABLED = MusicScript.MUSIC_ENABLED;
         public static string AUTOTHROW_ENABLED = "BrayAutoThowEnabled";
         public static string SPADE_END_TARGET = "SPADE_TARGET_SCORE";
 

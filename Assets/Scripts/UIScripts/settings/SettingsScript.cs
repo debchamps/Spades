@@ -113,6 +113,23 @@ public class SettingsScript : MonoBehaviour
         
     }
 
+
+    public void onMusicEnabled()
+    {
+
+        bool isMusicEnabled = GameObject.Find("MusicEnabledToggle").GetComponent<Toggle>().isOn;
+        if(isMusicEnabled)
+        {   
+            //Start the Music.
+        } else
+        {
+            //Stop the music
+        }
+        //First check, if things are really changing.
+        //First persist the change.
+
+    }
+
     public void onSandbagChange() {
             //First check, if things are really changing.
             settingsManager.setSettings(BraySettingsKey.IS_SANDBAG_ENABLED, GameObject.Find("SandBagEnabledToggle").GetComponent<Toggle>().isOn?1:0);
