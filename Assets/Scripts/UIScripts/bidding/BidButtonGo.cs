@@ -7,7 +7,9 @@ using DG.Tweening;
 
 
 public class BidButtonGo : MonoBehaviour {
-    float movementTime = .75f;
+    float movementTime = .3f;
+    static bool isOpenedOnce = false;
+    Vector3 initialScale;
 
     ConfigManager configManager = new ConfigManager();
 
@@ -67,15 +69,15 @@ public class BidButtonGo : MonoBehaviour {
         GameObject layout = GameObject.Find("biddingparent");
 
 
-        float movementTime = 1.5f;
-        layout.transform.DOMoveX(2 * Screen.width, movementTime);
+        //layout.transform.DOMoveX(2 * Screen.width, movementTime).SetEase(Ease.OutExpo);
 
+        layout.transform.DOScale(Vector3.zero, movementTime).SetEase(Ease.InBack);
 
         //StartCoroutine(MoveTo.MoveOverSeconds(layout, new Vector3(2 * Screen.width,getBiddingY(),0), .5f));
 
-   }
+    }
 
-   public void enableBidding() {
+    public void enableBidding() {
         //Close others.
 
         var game = GamePlay.matchState.getCurrentGameState();
@@ -92,8 +94,18 @@ public class BidButtonGo : MonoBehaviour {
        //GameObject layout = GameObject.Find("biddinglayout");
        GameObject layout = GameObject.Find("biddingparent");
        float floatY = getBiddingY();
-       layout.transform.position = new Vector3(2 * Screen.width,floatY,0);
+        if(!isOpenedOnce)
+        {
+            initialScale = layout.transform.localScale;
+            isOpenedOnce = true;
+            layout.transform.localScale = Vector3.zero;
+        }
+
+        //layout.transform.position = new Vector3(2 * Screen.width,floatY,0);
+        layout.transform.position = new Vector3(Screen.width/2, floatY, 0);
+
         //this.waitBeforeBiddingEnableAnimation = waitBeforeBiddingAnimation * 1.5f;
+
 
         var animationWait = configManager.callbreakTimingConfig.waitBeforeBiddingEnableAnimation;
         if (game.callBreakBidding.callBreakBiddingData.playerBidAmount.Count == 0)
@@ -103,7 +115,9 @@ public class BidButtonGo : MonoBehaviour {
 
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(animationWait);
-        sequence.Append(layout.transform.DOMoveX(Screen.width/2, movementTime));
+        sequence.Append(layout.transform.DOScale(initialScale, movementTime).SetEase(Ease.OutBack));
+
+        //sequence.Append(layout.transform.DOMoveX(Screen.width/2, movementTime).SetEase(Ease.OutBack));
 
         sequence.Play();
 

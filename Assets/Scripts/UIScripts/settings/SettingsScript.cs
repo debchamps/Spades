@@ -76,8 +76,9 @@ public class SettingsScript : MonoBehaviour
 
 
         //GameObject.Find("settingsparent").transform.position = new Vector3(Screen.width* 6, Screen.height/2, 0);
-        GameObject.Find("settingsparent").transform.DOScale(new Vector3(0.0f,0.0f, 1f),.25f);
-        AnimationUtil.closeDarkBkg();
+
+        AnimationUtil.closeDialogue(GameObject.Find("settingsparent"));
+        //GameObject.Find("settingsparent").transform.DOScale(new Vector3(0.0f,0.0f, 1f),.25f).SetEase(Ease.InBack);
 
     }
 

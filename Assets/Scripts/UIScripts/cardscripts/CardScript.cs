@@ -4,9 +4,6 @@ using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-
-
-
 public enum CardState
 {
  Front,
@@ -38,7 +35,7 @@ public class CardScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
     Camera camera;
 
-    bool cardPlayed = false;
+    public bool cardPlayed = false;
     bool isDraggable = true;
 
     bool isMoving = false;
@@ -300,7 +297,8 @@ public class CardScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
 
 
         if(!isMatchPlayOn && !canPassCard && !removeFromPassBox) {
-            StartCoroutine (MoveTo.MoveOverSeconds (gameObject, initial, configManager.callbreakTimingConfig.humanCardBringToInitialPos/1000));
+            gameObject.transform.DOMove(initial, configManager.callbreakTimingConfig.humanCardBringToInitialPos / 1000).SetEase(Ease.OutBack);
+            //StartCoroutine (MoveTo.MoveOverSeconds (gameObject, initial, configManager.callbreakTimingConfig.humanCardBringToInitialPos/1000));
             isDragging = false;
 
             return;
@@ -328,7 +326,8 @@ public class CardScript : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDr
                 }
 
                 if(!isPlayerTurn || !isValidCard || notPlayed) {
-                    StartCoroutine (MoveTo.MoveOverSeconds (gameObject, initial, configManager.callbreakTimingConfig.humanCardBringToInitialPos/1000));
+                    gameObject.transform.DOMove(initial, configManager.callbreakTimingConfig.humanCardBringToInitialPos / 1000).SetEase(Ease.OutBack);
+                    //StartCoroutine(MoveTo.MoveOverSeconds (gameObject, initial, configManager.callbreakTimingConfig.humanCardBringToInitialPos/1000));
                     isDragging = false;
 
                 } else {

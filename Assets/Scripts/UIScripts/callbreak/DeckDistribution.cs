@@ -152,7 +152,7 @@ public class DeckDistribution : MonoBehaviour
 
 
         for(int i=0;i<13;i++) {
-            cardObjects[i].transform.DOMove(getCardPositionInScreen(i), .3f);
+            cardObjects[i].transform.DOMove(getCardPositionInScreen(i), .75f).SetEase(Ease.OutBack);
 
         }
 
@@ -223,7 +223,7 @@ public class DeckDistribution : MonoBehaviour
 
 
         foreach(GameObject cardObj in cardObjects) {
-            yield return new WaitForSeconds(.1f);
+            yield return new WaitForSeconds(.05f);
             cardObj.GetComponent<CardScript>().moveToFront();
         }
 
@@ -255,7 +255,7 @@ public class DeckDistribution : MonoBehaviour
 
         GameObject cardObj = GameObjectFinder.findCardGameObject(cardToMove);
         if(cardObj != null)
-            cardObj.transform.DOMove(getCardPositionInScreen(cardObj.GetComponent<CardScript>().distributionIndex), .3f);      
+          cardObj.transform.DOMove(getCardPositionInScreen(cardObj.GetComponent<CardScript>().distributionIndex), .3f);      
 
 
     }

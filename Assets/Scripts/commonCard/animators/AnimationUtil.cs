@@ -23,14 +23,32 @@ public class AnimationUtil {
         
         var increaseScale = scaleTo * 1.05f;
         Sequence sequence=  DOTween.Sequence();
-        sequence.Append(obj.transform.DOScale(increaseScale, animateTime * .85f));
-        sequence.Append(obj.transform.DOScale(scaleTo, animateTime * .15f));
-        sequence.Play();
+
+        obj.transform.DOScale(scaleTo, animateTime).SetEase(Ease.OutBack);
+
+        //sequence.Append(obj.transform.DOScale(increaseScale, animateTime * .85f));
+        //sequence.Append(obj.transform.DOScale(scaleTo, animateTime * .15f));
+        //sequence.Play();
        
     }
 
+    public static void closeDialogue(GameObject obj)
+    {
+        obj.transform.DOScale(new Vector3(0f, 0f, 1f), .25f).SetEase(Ease.InBack);
+        AnimationUtil.closeDarkBkg();
 
-     public static void moveUpAndDown(GameObject obj, float time, int count, float initialDelay, float amount) {
+    }
+
+    public static void closeDialogue(GameObject obj, float animateTime)
+    {
+        obj.transform.DOScale(new Vector3(0f, 0f, 1f), animateTime).SetEase(Ease.InBack);
+        AnimationUtil.closeDarkBkg();
+
+    }
+
+
+
+    public static void moveUpAndDown(GameObject obj, float time, int count, float initialDelay, float amount) {
 
         Sequence sequence=  DOTween.Sequence();
 
@@ -145,12 +163,17 @@ public class AnimationUtil {
 
     }
 
-    public static void closeBkg(Image darkObj) {
-        darkObj.DOFade(0f/255, 0f);
+    public static void closeBkg(Image darkObj)
+    {
+        darkObj.DOFade(0f / 255, 0f);
         darkObj.enabled = false;
     }
 
+    public static void disable()
+    {
+        //darkObj.enabled = false;
 
+    }
 
 
 

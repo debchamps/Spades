@@ -114,7 +114,8 @@ public class RestartScript : MonoBehaviour
         float height = RectTransformExt.GetWorldRect(GameObject.Find("bottomBar").GetComponent<RectTransform>()).height;
         float heightRestart = RectTransformExt.GetWorldRect(GameObject.Find("restartgame").GetComponent<RectTransform>()).height;
         float y = GameObject.Find("bottomBar").transform.position.y + height + heightRestart / 2;
-        return new Vector3(Screen.width / 2, y, 1f);
+        return new Vector3(Screen.width / 2, Screen.height/2, 1f);
+        //return new Vector3(Screen.width / 2, y, 1f);
         //Formulat 
         //
         //x = Screen.width.2 y = bottomBar Top + Bottom bar height * .2f

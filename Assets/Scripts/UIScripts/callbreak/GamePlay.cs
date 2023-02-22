@@ -9,6 +9,10 @@ using TMPro;
 
 using System.Collections;
 using System.Collections.Generic;
+using GoogleMobileAds.Api;
+using GoogleMobileAds.Placement;
+using static SpadeGameState;
+
 public class GamePlay : MonoBehaviour {
 
 
@@ -78,6 +82,30 @@ public class GamePlay : MonoBehaviour {
         }        
 
     }
+
+    public static void setupAds()
+    {
+        List<string> deviceIds = new List<string>();
+        deviceIds.Add("");
+        RequestConfiguration requestConfiguration = new RequestConfiguration.Builder().SetTestDeviceIds(deviceIds).build();
+        MobileAds.SetRequestConfiguration(requestConfiguration);
+        MobileAds.SetiOSAppPauseOnBackground(true);
+        MobileAds.Initialize((initStatus) => {
+            DebugLog.Log("Initialized MobileAds with status " + initStatus);
+
+            if (AdManager.isInterstitialAdEnabled())
+            {
+                InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
+                interstitialAd.LoadAd();
+            }
+
+        });
+
+
+
+    }
+
+
 
     void Update()
     {
@@ -304,6 +332,8 @@ public class GamePlay : MonoBehaviour {
 
         Application.targetFrameRate = 60;
 
+        setupAds();
+
         //All GameObject resolution adjustmentbased on screen size.
         AdjustGameObjectResolution.adjust();
 
@@ -419,7 +449,12 @@ public class GamePlay : MonoBehaviour {
 
     public  static IEnumerator setTextWithDelayEnumerator(GameObject obj, string txt, float delay) {
         yield return new WaitForSeconds(delay);
-        obj.GetComponent<Text>().text = txt;
+        if(obj.GetComponent<Text>() != null)
+            obj.GetComponent<Text>().text = txt;
+        if (obj.GetComponent<TMP_Text>() != null)
+        {
+            obj.GetComponent<TMP_Text>().text = txt;
+        }
 
     }
 
@@ -557,6 +592,8 @@ public class GamePlay : MonoBehaviour {
 
     IEnumerator  startNextMatchIEnumerator() {
         //infoTextAnimation("Game Starts");
+
+
         yield return new WaitForSeconds(1f);
         StartCoroutine(startMatch());
     }
@@ -601,6 +638,7 @@ public class GamePlay : MonoBehaviour {
         GameObject.Find("ScriptEmpty").GetComponent<ScoreboardScript>().setMatchScore(matchState);
         GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().initGameScore();
 
+
         updateGameScreenOnSettings();
 
         resetNilBid();
@@ -634,10 +672,12 @@ public class GamePlay : MonoBehaviour {
          //WarningEntity entity = new WarningEntity("Starting a New Bray Match", "");
          //GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(entity);
 
+
         yield return new WaitForSeconds(.6f);
 
 
         infoTextAnimation("Starting \nNew Match");
+        GameObject.Find("ScriptEmpty").GetComponent<SeatSwitcher>().setToPlayerNames();
 
 
         //Few cleanup needs to be done. Score and Move played card.
@@ -655,6 +695,7 @@ public class GamePlay : MonoBehaviour {
 
     public IEnumerator  startMatch() {
 
+        GameObject.Find("ScriptEmpty").GetComponent<SeatSwitcher>().setToPlayerNames();
         yield return new WaitForSeconds(0.05f);
 
         if(matchState == null || matchState.matchState.Equals(SpadeMatchState.MatchState.COMPLETED)) {
@@ -704,15 +745,22 @@ public class GamePlay : MonoBehaviour {
             updateGameComplete(callbreakMatchState);
             Analytics.CustomEvent(EVENT_PREFIX + "GameComplete");
             //updateBiddingComplete(callbreakMatchState.getCurrentGameState());
+            if (AdManager.isBannerAdEnabled())
+            {
+                BannerAdGameObject bannerAd = MobileAds.Instance.GetAd<BannerAdGameObject>("BannerAd");
+                bannerAd.LoadAd();
+            }
         }
-        if(notificationStatus.Equals(SpadeMatchState.NotificationStatus.MATCH_COMPLETE)) {
+        if (notificationStatus.Equals(SpadeMatchState.NotificationStatus.MATCH_COMPLETE)) {
             updateGameComplete(callbreakMatchState);
             Analytics.CustomEvent(EVENT_PREFIX + "MatchComplete");
+
+
 
             //updateBiddingComplete(callbreakMatchState.getCurrentGameState());
         }
 
-        if(notificationStatus.Equals(SpadeMatchState.NotificationStatus.MOVE)) {
+        if (notificationStatus.Equals(SpadeMatchState.NotificationStatus.MOVE)) {
             updateMove(callbreakMatchState);
         }
 
@@ -743,11 +791,17 @@ public class GamePlay : MonoBehaviour {
         PlayerPosition winnerPosition = callbreakMatchState.getCurrentGameState().getLastCompletedRound().winner;
 
 
-        //Get winning team.
+        //Get winning Player.
+
+        GameObject winnerScoreGO = SeatSwitcher.getSeat(winnerPosition).transform.Find("seatLabel/score1").gameObject;
+
+        GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().scaleUpAndDown(winnerScoreGO, .6f, 1.5f, 1.5f);
+        GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(winnerScoreGO, getScoreStringV2(callbreakMatchState,winnerPosition), 1.3f);
+
 
         if(winnerPosition.Equals(PlayerPosition.SOUTH) || winnerPosition.Equals(PlayerPosition.NORTH)) {
             GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().scaleUpAndDown(GameObject.Find("team1score/scoretxt") , .6f, 1.5f, 1.5f);
-           GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("team1score/scoretxt")  , getScoreString(callbreakMatchState,winnerPosition), 1.3f);
+            GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("team1score/scoretxt")  , getScoreString(callbreakMatchState,winnerPosition), 1.3f);
 
         } else {
             GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().scaleUpAndDown(GameObject.Find("team2score/scoretxt")  , .6f, 1.5f, 1.5f);
@@ -781,6 +835,10 @@ public class GamePlay : MonoBehaviour {
 
         //Also init showing NIL.
         
+    }
+
+    static string getScoreStringV2(SpadeMatchState match, PlayerPosition playerPosition) {
+        return match.getCurrentGameState().tricksWinnerCount[playerPosition].ToString();
     }
 
     static string getScoreString(SpadeMatchState callbreakMatchState, PlayerPosition playerPosition){
@@ -1056,13 +1114,17 @@ public class GamePlay : MonoBehaviour {
 
         }
 
+        /*
         if(gameState.gameVariant.Equals(GameVariant.HEARTS) && gameState.isNoPassingRound()) {
             GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity("NO Passing in this Round", "C"));
 
-        }
+        }*/
 
         //Reset score order.
         GameObject.Find("ScriptEmpty").GetComponent<ScoreboardScript>().init();
+
+        GameObject.Find("ScriptEmpty").GetComponent<SeatSwitcher>().setToPlayerScores(2f);
+
 
     }
 
@@ -1210,7 +1272,9 @@ public class GamePlay : MonoBehaviour {
             if(shouldNotActivateHearts && gameObject.GetComponent<CardScript>().card.suit.Equals("H")) {
 
             } else {
-                gameObject.GetComponent<CardScript>().activate();
+                //TODO: If card is already played. Then do not activate it.
+                if(!gameObject.GetComponent<CardScript>().cardPlayed)
+                    gameObject.GetComponent<CardScript>().activate();
             }
         }
 

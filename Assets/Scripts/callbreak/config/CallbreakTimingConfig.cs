@@ -24,7 +24,7 @@ public class CallbreakTimingConfig {
 
     public float waitBeforeWinningMoveAnimationInSeconds;
 
-    public float winningMoveAnimationTimeInSeconds = 0.5f;
+    public float winningMoveAnimationTimeInSeconds = .5f;
 
     public float waitBeforeBiddingAnimation = 1.25f;
 

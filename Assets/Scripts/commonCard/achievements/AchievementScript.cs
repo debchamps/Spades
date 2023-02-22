@@ -37,6 +37,7 @@ public class AchievementScript : MonoBehaviour
             closeOthers();
             loadAchievements();
             GameObject.Find("achievementparent").transform.position = new Vector3(Screen.width/2, Screen.height/2 , 1);
+
             AnimationUtil.openDarkBkg(.3f);
             AnimationUtil.openDialogue(GameObject.Find("achievementparent"), achievementLocalScale.x, .3f);
 
@@ -48,9 +49,8 @@ public class AchievementScript : MonoBehaviour
 
     public void close() {
 
-        GameObject.Find("achievementparent").transform.DOScale(new Vector3(0f,0f, 1f),.25f);
         open = false;
-        AnimationUtil.closeDarkBkg();
+        AnimationUtil.closeDialogue(GameObject.Find("achievementparent"));
 
         //GameObject.Find("achievementparent").transform.position = new Vector3(Screen.width * 5, Screen.height/2 , 1);
 

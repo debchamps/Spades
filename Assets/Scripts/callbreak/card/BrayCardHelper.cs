@@ -305,8 +305,12 @@ public class BrayCardHelper {
             return null;
         }
 
+        if (currRound.roundNumber == 1 && currRound.moveNumber == 0)
+        {
+            return new WarningEntity("<sprite=3>  NOT broken yet", "Cards/" + "icon");
+        }
 
-
+        /*
         if(brayGameState.gameVariant.Equals(GameVariant.HEARTS)) {
             if(currRound.moveNumber == 0) {
                 if(currRound.roundNumber == 1) {
@@ -321,7 +325,7 @@ public class BrayCardHelper {
 
             }
 
-        }
+        }*/
 
         string roundSuit = currRound.moves[0].card.suit;
 

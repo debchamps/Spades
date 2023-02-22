@@ -473,10 +473,13 @@ public class SubsequentMove {
             } else {
                 //Currently some other Spade is winning. See if I have higher spades. Then overtrump with the lowest higher card.
                 List<Card> higherSpades = callbreakCardHelper.filterHigherCard(spades, winningCard);
-                if(higherSpades.Count > 0) {
+                if (higherSpades.Count > 0)
+                {
                     callbreakCardHelper.sortByRank(higherSpades);
-                    return higherSpades[higherSpades.Count -1];
+                    return higherSpades[higherSpades.Count - 1];
                 }
+                else
+                    return null;
 
             }
 

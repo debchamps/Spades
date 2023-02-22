@@ -195,7 +195,12 @@ public class MovePlayedCard : MonoBehaviour
             cardGameObject.GetComponent<Image>().enabled = true;
             camera = GameObject.Find("CameraMain").GetComponent<Camera>();
 
+            if(callbreakMove.card.suit.Equals("D") && callbreakMove.card.number.Equals("A"))
+            {
+                var currScale = cardGameObject.transform.localScale;
+                cardGameObject.transform.localScale = new Vector2(currScale.x * .73f, currScale.y * .85f);
 
+            }
             //cardGameObject.transform.position = camera.WorldToScreenPoint(playerCardStartingPositionMap[callbreakMove.playerPosition]);
             cardGameObject.transform.position = GameObject.Find("player" + PlayerPositionHelper.getName(callbreakMove.playerPosition).ToLower() + "scoregroup").transform.position;
 
@@ -525,18 +530,36 @@ public class MovePlayedCard : MonoBehaviour
 
         yield return new WaitForSeconds(.2f);
 
-        cardGameObject1.transform.DOMove(moveLocation, winningMoveAnimationTime);
-        cardGameObject2.transform.DOMove(moveLocation, winningMoveAnimationTime);
-        cardGameObject3.transform.DOMove(moveLocation, winningMoveAnimationTime);
-        cardGameObject4.transform.DOMove(moveLocation, winningMoveAnimationTime).OnComplete(activateAllCards);
+        cardGameObject1.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack);
+        cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime).SetEase(Ease.InBack);
+        cardGameObject2.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack);
+        cardGameObject3.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack);
+        cardGameObject4.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack).
+            OnComplete(activateAllCards);
+
+        Vector3 initalScale = cardGameObject1.transform.localScale;
 
 
-        yield return new WaitForSeconds(winningMoveAnimationTime);
+        yield return new WaitForSeconds(winningMoveAnimationTime /3);
+
+        cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime*2/3).SetEase(Ease.InExpo);
+        cardGameObject2.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
+        cardGameObject3.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
+        cardGameObject4.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
+
+
+        yield return new WaitForSeconds(winningMoveAnimationTime );
 
         cardGameObject1.transform.position = OUT_OF_SCREEN_POS;
         cardGameObject2.transform.position = OUT_OF_SCREEN_POS;
         cardGameObject3.transform.position = OUT_OF_SCREEN_POS;
         cardGameObject4.transform.position = OUT_OF_SCREEN_POS;
+
+
+        cardGameObject1.transform.localScale = initalScale;
+        cardGameObject2.transform.localScale = initalScale;
+        cardGameObject3.transform.localScale = initalScale;
+        cardGameObject4.transform.localScale = initalScale;
 
     }
 

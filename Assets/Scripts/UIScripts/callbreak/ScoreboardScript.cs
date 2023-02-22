@@ -3,11 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
+using GoogleMobileAds.Api;
+using GoogleMobileAds.Placement;
+using System;
 
 public class ScoreboardScript : MonoBehaviour
 {
 
     static  int gameNumber;
+    public static bool isAdLoaded = false;
     Transform northTransform, southTransform, eastTransform, westTransform;
 
     void Start() {
@@ -99,6 +103,10 @@ public class ScoreboardScript : MonoBehaviour
         if(callbreakMatchState.getCurrentGameState().gameStatus.Equals(SpadeGameState.GameStatus.COMPLETED))
             isGameCompleted = true;
 
+        if (isMatchCompleted || isGameCompleted)
+        {
+            loadAdOnly();
+        }
 
 
         Debug.Log("Match Completed is isMatchCompleted" + isMatchCompleted);
@@ -376,6 +384,66 @@ public class ScoreboardScript : MonoBehaviour
          
     }
 
+    private void loadAdOnly()
+    {
+        if (!AdManager.isInterstitialAdEnabled())
+        {
+            return;
+        }
+
+        if (!isAdLoaded)
+        {
+            InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
+            interstitialAd.LoadAd();
+            isAdLoaded = true;
+        }
+        else
+        {
+            //Ad already loaded.
+        }
+
+    }
+
+    private IEnumerator loadAd()
+    {
+
+        DebugLog.Log("Loading InterstitialGameEnd");
+        //Wait till The score disappears.
+        yield return new WaitForSeconds(0.5f);
+
+        bool loadAdEnabled = AdManager.isInterstitialAdEnabled();
+        if (loadAdEnabled)
+        {
+            try
+            {
+
+                DebugLog.Log("Fetched InterstitialGameEnd");
+
+                InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
+                interstitialAd.ShowIfLoaded();
+                //SceneManager.LoadScene("CommonCardScene");
+                isAdLoaded = false;
+
+                DebugLog.Log("Show InterstitialGameEnd");
+
+                GamePlay.startNextMatchStatic();
+            }
+            catch (Exception e)
+            {
+                isAdLoaded = false;
+                DebugLog.Log("Exception in Showing Ad" + e.ToString());
+                Debug.LogException(e, this);
+                GamePlay.startNextMatchStatic();
+            }
+
+        }
+        else
+        {
+            GamePlay.startNextMatchStatic();
+        }
+    }
+
+
     private void cleanAnimations() {
         foreach(Sequence seq in sequences) {
             seq.Kill();
@@ -408,12 +476,19 @@ public class ScoreboardScript : MonoBehaviour
 
         float floatY = Screen.height/2;
 
-        parentObj.transform.DOMove(new Vector3(2 * Screen.width,floatY),0.4f).SetDelay(0f).OnComplete(resetPrize);
+        parentObj.transform.DOMove(new Vector3(Screen.width * 2,floatY),0.4f).SetDelay(0f).OnComplete(resetPrize);
 
-        if(GamePlay.matchState.matchState.Equals(SpadeMatchState.MatchState.COMPLETED))
+
+        if (GamePlay.matchState.matchState.Equals(SpadeMatchState.MatchState.COMPLETED))
+        {
+            StartCoroutine(loadAd());
+
+        }
+        else if (GamePlay.matchState.getCurrentGameState().gameStatus.Equals(SpadeGameState.GameStatus.COMPLETED))
+        {
             GamePlay.startNextMatchStatic();
-        else if(GamePlay.matchState.getCurrentGameState().gameStatus.Equals(SpadeGameState.GameStatus.COMPLETED))
-            GamePlay.startNextMatchStatic();
+
+        }
 
     }
 
