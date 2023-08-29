@@ -214,8 +214,8 @@ public class MovePlayedCard : MonoBehaviour
                 StartCoroutine(MoveTo.MoveOverSeconds(cardGameObject, playPosition(callbreakMove.playerPosition), moveTime));
 
 
-            if (callbreakMove.card.suit.Equals("H") && callbreakMove.playerPosition.Equals(PlayerPosition.NORTH))
-                AudioManagerScript.play(AudioClipType.PLAY_CARD);
+            //if (callbreakMove.card.suit.Equals("H") && callbreakMove.playerPosition.Equals(PlayerPosition.NORTH))
+            //    AudioManagerScript.play(AudioClipType.PLAY_CARD);
 
 
             SpadeGameState gameState = GamePlay.matchState.getCurrentGameState();
@@ -460,87 +460,28 @@ public class MovePlayedCard : MonoBehaviour
         if (winner.Equals(PlayerPosition.SOUTH))
             AudioManagerScript.play(AudioClipType.ROUND_WON);
 
-        {
-
-            bool shouldUpdatScore = true;
-
-            //TODO: Delete the animations and the symbols. Blah. blah
-            /*
-            foreach(BrayMove move in currRound.moves) {
-                if(move.card.suit.Equals("H") || move.card.getCardId().Equals("SQ")) {
-                    GameObject obj = null;
-                   if(move.playerPosition.Equals(PlayerPosition.SOUTH)) {
-                          GameObject obj1 = GameObject.Find("suiticon" + PlayerPositionHelper.getName(move.playerPosition).ToLower());
-                          obj = GameObject.Find("suiticon" + PlayerPositionHelper.getName(move.playerPosition).ToLower() + "Duplicate");
-                          obj.transform.position = obj1.transform.position;
-
-                   } else {
-                      obj = GameObject.Find("suiticon" + PlayerPositionHelper.getName(move.playerPosition).ToLower());
-
-                   }
-                    float scaleFactor = 0f, endScaleFactor = 0f;
-                    if(move.card.suit.Equals("H")) {
-                        obj.GetComponent<Image>().sprite = Resources.Load<Sprite>("bray/heart_symbol");
-                        //obj.GetComponent<Image>().sprite = Resources.Load<Sprite>("bray/heart_symbolv2");
-                        endScaleFactor  = 1.1f;
-
-                    } else {
-                        //obj.GetComponent<Image>().sprite = Resources.Load<Sprite>("bray/spade_icon_v2");
-                        //obj.GetComponent<Image>().sprite = Resources.Load<Sprite>("bray/spade_icon_v3");
-                        obj.GetComponent<Image>().sprite = Resources.Load<Sprite>("bray/spade_points");
-                        //obj.GetComponent<Image>().sprite = Resources.Load<Sprite>("bray/spade_symbol");
-                        scaleFactor = 3f;
-                        endScaleFactor = 1.4f;
-
-                    }
-                    Sequence sequence = DOTween.Sequence();
-                    Vector3 currLoc  = obj.transform.position;
-                    sequence.Append(obj.transform.DOScale(new Vector3(scaleFactor, scaleFactor, 1f), .15f));
-                    sequence.Append(obj.transform.DOScale(new Vector3(endScaleFactor, endScaleFactor, 1f), .15f));
-                    sequence.AppendInterval(.4f);
-
-                    sequence.Append(obj.transform.DOMove(GameObject.Find("player"  + PlayerPositionHelper.getName(winner).ToLower() + "score").transform.position, .3f));
-                    sequence.Append(obj.transform.DOScale(new Vector3(0f, 0f, 1f), .1f));
-
-
-                    if(shouldUpdatScore) {
-                        shouldUpdatScore = false;
-                        sequence.AppendCallback(setScoreString);
-                        sequence.Append(GameObjectFinder.getPlayerScoreObject(winner).transform.DOScale(new Vector3(2f, 1.6f, 1f), .4f));
-                        sequence.Append(GameObjectFinder.getPlayerScoreObject(winner).transform.DOScale(new Vector3(1f, 0.8f, 1f), .3f));
-                    }
-
-                    sequence.Append(obj.transform.DOMove(currLoc, 0f));
-                    sequence.Play();
-                }
-
-            }
-            //GameObject obj = GameObject.Find("suiticon");
-
-            */
-
-        }
+        bool shouldUpdatScore = true;
 
 
 
         yield return new WaitForSeconds(.2f);
 
-        cardGameObject1.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack);
-        cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime).SetEase(Ease.InBack);
-        cardGameObject2.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack);
-        cardGameObject3.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack);
-        cardGameObject4.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack).
-            OnComplete(activateAllCards);
+        cardGameObject1.transform.DOMove(moveLocation, winningMoveAnimationTime);//.SetEase(Ease.InBack);
+        //cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime).SetEase(Ease.InBack);
+        cardGameObject2.transform.DOMove(moveLocation, winningMoveAnimationTime);//.SetEase(Ease.InBack);
+        cardGameObject3.transform.DOMove(moveLocation, winningMoveAnimationTime);//.SetEase(Ease.InBack);
+        cardGameObject4.transform.DOMove(moveLocation, winningMoveAnimationTime)//.SetEase(Ease.InBack).
+        .OnComplete(activateAllCards);
 
         Vector3 initalScale = cardGameObject1.transform.localScale;
 
 
         yield return new WaitForSeconds(winningMoveAnimationTime /3);
 
-        cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime*2/3).SetEase(Ease.InExpo);
-        cardGameObject2.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
-        cardGameObject3.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
-        cardGameObject4.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
+        //cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime*2/3).SetEase(Ease.InExpo);
+        //cardGameObject2.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
+        //cardGameObject3.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
+        //cardGameObject4.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
 
 
         yield return new WaitForSeconds(winningMoveAnimationTime );

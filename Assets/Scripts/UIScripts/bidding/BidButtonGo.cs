@@ -9,7 +9,8 @@ using DG.Tweening;
 public class BidButtonGo : MonoBehaviour {
     float movementTime = .3f;
     static bool isOpenedOnce = false;
-    Vector3 initialScale;
+    public static Vector3 dialogueSize;
+    public static Vector3 dialogueFinalPos;
 
     ConfigManager configManager = new ConfigManager();
 
@@ -44,22 +45,11 @@ public class BidButtonGo : MonoBehaviour {
     
    }
 
-
    public void showContinueButton() {
         GameObject.Find("bidcontinuetext").GetComponent<Text>().enabled = true;
 
         GameObject.Find("bidFinalBtn").GetComponent<Image>().DOFade(1,.1f);
    }
-
-
-
-    public void animateBidding() {
-
-
-
-    }
-
-
 
    public void disableBidding() {
 
@@ -96,13 +86,14 @@ public class BidButtonGo : MonoBehaviour {
        float floatY = getBiddingY();
         if(!isOpenedOnce)
         {
-            initialScale = layout.transform.localScale;
+            dialogueSize = layout.transform.localScale;
+            dialogueFinalPos = new Vector3(Screen.width / 2, floatY);
             isOpenedOnce = true;
             layout.transform.localScale = Vector3.zero;
         }
 
         //layout.transform.position = new Vector3(2 * Screen.width,floatY,0);
-        layout.transform.position = new Vector3(Screen.width/2, floatY, 0);
+        layout.transform.position = dialogueFinalPos;
 
         //this.waitBeforeBiddingEnableAnimation = waitBeforeBiddingAnimation * 1.5f;
 
@@ -115,7 +106,7 @@ public class BidButtonGo : MonoBehaviour {
 
         Sequence sequence = DOTween.Sequence();
         sequence.AppendInterval(animationWait);
-        sequence.Append(layout.transform.DOScale(initialScale, movementTime).SetEase(Ease.OutBack));
+        sequence.Append(layout.transform.DOScale(dialogueSize, movementTime).SetEase(Ease.OutBack));
 
         //sequence.Append(layout.transform.DOMoveX(Screen.width/2, movementTime).SetEase(Ease.OutBack));
 
