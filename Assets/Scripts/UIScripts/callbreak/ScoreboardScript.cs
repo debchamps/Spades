@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using DG.Tweening;
 using GoogleMobileAds.Api;
-using GoogleMobileAds.Placement;
+//using GoogleMobileAds.Placement;
 using System;
 
 public class ScoreboardScript : MonoBehaviour
@@ -393,8 +393,10 @@ public class ScoreboardScript : MonoBehaviour
 
         if (!isAdLoaded)
         {
-            InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
-            interstitialAd.LoadAd();
+            GameObject.Find("ScriptEmpty").GetComponent<AdManager>().LoadInterstitialAd();
+
+            //InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
+            //interstitialAd.LoadAd();
             isAdLoaded = true;
         }
         else
@@ -419,8 +421,11 @@ public class ScoreboardScript : MonoBehaviour
 
                 DebugLog.Log("Fetched InterstitialGameEnd");
 
-                InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
-                interstitialAd.ShowIfLoaded();
+
+                GameObject.Find("ScriptEmpty").GetComponent<AdManager>().ShowInterstitialAd();
+
+                //InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
+                //interstitialAd.ShowIfLoaded();
                 //SceneManager.LoadScene("CommonCardScene");
                 isAdLoaded = false;
 
@@ -486,7 +491,17 @@ public class ScoreboardScript : MonoBehaviour
         }
         else if (GamePlay.matchState.getCurrentGameState().gameStatus.Equals(SpadeGameState.GameStatus.COMPLETED))
         {
-            GamePlay.startNextMatchStatic();
+            if(GamePlay.matchState.getCurrentGameState().gameNumber %3 == 0)
+            {
+                StartCoroutine(loadAd());
+
+            }
+            else
+            {
+                GamePlay.startNextMatchStatic();
+
+            }
+
 
         }
 

@@ -20176,6 +20176,7 @@ GameObject:
   - component: {fileID: 1205494588}
   - component: {fileID: 1205494589}
   - component: {fileID: 1205494590}
+  - component: {fileID: 1205494591}
   m_Layer: 5
   m_Name: ScriptEmpty
   m_TagString: Untagged
@@ -20398,6 +20399,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: e8285c33150e2441f8b80fd4b9d91b1c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &1205494591
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1205494571}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 4a380fde339bf4abd99d003af5598e89, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &1211406209
@@ -22909,32 +22922,11 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1366293519}
-  m_Enabled: 1
+  m_Enabled: 0
   m_EditorHideFlags: 0
   m_Script: {fileID: 403243224, guid: a1b1ab44b4414d64bd404c895fbd1eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adType: 1
-  selectedPlacementIndex: 0
-  androidAdUnitId: ca-app-pub-1368766915086140/4463076032
-  iOSAdUnitId: ca-app-pub-1368766915086140/9957201010
-  persistent: 0
-  autoLoadEnabled: 0
-  onAdLoaded:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdFailedToLoad:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdOpening:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdClosed:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdLeavingApplication:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1366293522
 Transform:
   m_ObjectHideFlags: 0
@@ -30179,34 +30171,6 @@ MonoBehaviour:
   m_Script: {fileID: -287287577, guid: a1b1ab44b4414d64bd404c895fbd1eab, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  adType: 0
-  selectedPlacementIndex: 0
-  androidAdUnitId: ca-app-pub-1368766915086140/8083876403
-  iOSAdUnitId: ca-app-pub-1368766915086140/4537940106
-  persistent: 0
-  autoLoadEnabled: 0
-  adSize:
-    type: 2
-    width: -1
-    height: 0
-    orientation: 0
-  adPosition: 1
-  adPositionOffset: {x: 0, y: 0}
-  onAdLoaded:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdFailedToLoad:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdOpening:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdClosed:
-    m_PersistentCalls:
-      m_Calls: []
-  onAdLeavingApplication:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!4 &1721783138
 Transform:
   m_ObjectHideFlags: 0
@@ -36457,7 +36421,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.99215686, g: 0.7019608, b: 0.023529412, a: 1}
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
   m_RaycastTarget: 1
   m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
   m_Maskable: 1
@@ -36963,8 +36927,20 @@ PrefabInstance:
       value: -217
       objectReference: {fileID: 0}
     - target: {fileID: 6721568412031812035, guid: cdb5e26cdb7b242c5ad0b8152d28b049, type: 3}
+      propertyPath: name
+      value: Euchre
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721568412031812035, guid: cdb5e26cdb7b242c5ad0b8152d28b049, type: 3}
       propertyPath: target
       value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721568412031812035, guid: cdb5e26cdb7b242c5ad0b8152d28b049, type: 3}
+      propertyPath: gameIdIOS
+      value: com.datgames.spade
+      objectReference: {fileID: 0}
+    - target: {fileID: 6721568412031812035, guid: cdb5e26cdb7b242c5ad0b8152d28b049, type: 3}
+      propertyPath: gameIdAndroid
+      value: com.datgames.spade
       objectReference: {fileID: 0}
     - target: {fileID: 6721568412031812036, guid: cdb5e26cdb7b242c5ad0b8152d28b049, type: 3}
       propertyPath: m_Pivot.x
@@ -37111,6 +37087,10 @@ PrefabInstance:
       propertyPath: EVENT_TYPE
       value: BrayGameTarget
       objectReference: {fileID: 0}
+    - target: {fileID: 7018024010551841750, guid: 257a6acc9cd1144cda19c9ab2aac77a7, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: 0
+      objectReference: {fileID: 0}
     - target: {fileID: 7018024010643742198, guid: 257a6acc9cd1144cda19c9ab2aac77a7, type: 3}
       propertyPath: m_Text
       value: 500
@@ -37205,15 +37185,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 7018024012306344721, guid: 257a6acc9cd1144cda19c9ab2aac77a7, type: 3}
       propertyPath: m_Color.b
-      value: 0.6666667
+      value: 0.43244928
       objectReference: {fileID: 0}
     - target: {fileID: 7018024012306344721, guid: 257a6acc9cd1144cda19c9ab2aac77a7, type: 3}
       propertyPath: m_Color.g
-      value: 0.6666667
+      value: 0.43244928
       objectReference: {fileID: 0}
     - target: {fileID: 7018024012306344721, guid: 257a6acc9cd1144cda19c9ab2aac77a7, type: 3}
       propertyPath: m_Color.r
-      value: 0.78431374
+      value: 0.8113208
       objectReference: {fileID: 0}
     - target: {fileID: 7018024012306344723, guid: 257a6acc9cd1144cda19c9ab2aac77a7, type: 3}
       propertyPath: CODE

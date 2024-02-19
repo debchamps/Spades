@@ -1,4 +1,4 @@
-﻿// Copyright 2018 Google LLC
+// Copyright 2018 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -148,10 +148,11 @@ namespace Google.Play.Common.LoadingScreen
 
         private static bool IsNetworkError(UnityWebRequest request)
         {
-#if UNITY_2017_1_OR_NEWER
-            return request.isHttpError || request.isNetworkError;
+#if UNITY_2020_2_OR_NEWER
+            return request.result == UnityWebRequest.Result.ConnectionError ||
+                   request.result == UnityWebRequest.Result.ProtocolError;
 #else
-            return request.isError;
+            return request.isHttpError || request.isNetworkError;
 #endif
         }
 
@@ -162,12 +163,7 @@ namespace Google.Play.Common.LoadingScreen
 #else
             webRequest = UnityWebRequest.GetAssetBundle(assetBundleUrl);
 #endif
-
-#if UNITY_2017_2_OR_NEWER
             return webRequest.SendWebRequest();
-#else
-            return webRequest.Send();
-#endif
         }
     }
 }

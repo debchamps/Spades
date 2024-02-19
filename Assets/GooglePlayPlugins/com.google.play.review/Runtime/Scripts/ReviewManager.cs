@@ -22,11 +22,22 @@ namespace Google.Play.Review
     /// </summary>
     public class ReviewManager
     {
-        private readonly ReviewPlayCoreTaskManager _reviewPlayCoreTaskManager;
+        /// <summary>
+        /// Translation of Java ReviewErrorCode from:
+        /// <a
+        /// href="https://developer.android.com/reference/com/google/android/play/core/review/model/ReviewErrorCode"></a>
+        /// </summary>
+        private const int JavaReviewErrorCodePlayNotFound = -1;
+
+#if !UNITY_EDITOR
+        private readonly ReviewPlayServicesTaskManager _reviewPlayServicesTaskManager;
+#endif
 
         public ReviewManager()
         {
-            _reviewPlayCoreTaskManager = new ReviewPlayCoreTaskManager();
+#if !UNITY_EDITOR
+            _reviewPlayServicesTaskManager = new ReviewPlayServicesTaskManager();
+#endif
         }
 
         /// <summary>
@@ -37,7 +48,13 @@ namespace Google.Play.Review
         /// </summary>
         public PlayAsyncOperation<PlayReviewInfo, ReviewErrorCode> RequestReviewFlow()
         {
+#if UNITY_EDITOR
+            var operation = new ReviewAsyncOperation<PlayReviewInfo>();
+            operation.SetResult(new PlayReviewInfo(null));
+            return operation;
+#else
             return RequestReviewFlowInternal();
+#endif
         }
 
         /// <summary>
@@ -48,13 +65,20 @@ namespace Google.Play.Review
         public PlayAsyncOperation<VoidResult, ReviewErrorCode> LaunchReviewFlow(
             PlayReviewInfo reviewInfo)
         {
+#if UNITY_EDITOR
+            var operation = new ReviewAsyncOperation<VoidResult>();
+            operation.SetResult(new VoidResult());
+            return operation;
+#else
             return LaunchReviewFlowInternal(reviewInfo);
+#endif
         }
 
+#if !UNITY_EDITOR
         private PlayAsyncOperation<PlayReviewInfo, ReviewErrorCode> RequestReviewFlowInternal()
         {
             var operation = new ReviewAsyncOperation<PlayReviewInfo>();
-            var requestFlowTask = _reviewPlayCoreTaskManager.RequestReviewFlow();
+            var requestFlowTask = _reviewPlayServicesTaskManager.RequestReviewFlow();
             requestFlowTask.RegisterOnSuccessCallback(reviewInfo =>
             {
                 operation.SetResult(new PlayReviewInfo(reviewInfo));
@@ -62,7 +86,11 @@ namespace Google.Play.Review
             });
             requestFlowTask.RegisterOnFailureCallback((reason, errorCode) =>
             {
-                operation.SetError(ReviewErrorCode.ErrorRequestingFlow);
+                if (errorCode == JavaReviewErrorCodePlayNotFound) {
+                    operation.SetError(ReviewErrorCode.PlayStoreNotFound);
+                } else {
+                    operation.SetError(ReviewErrorCode.ErrorRequestingFlow);
+                }
                 requestFlowTask.Dispose();
             });
             return operation;
@@ -72,7 +100,7 @@ namespace Google.Play.Review
         {
             var operation = new ReviewAsyncOperation<VoidResult>();
             var requestFlowTask =
-                _reviewPlayCoreTaskManager.LaunchReviewFlow(reviewInfo.GetReviewInfo());
+                _reviewPlayServicesTaskManager.LaunchReviewFlow(reviewInfo.GetReviewInfo());
             requestFlowTask.RegisterOnSuccessCallback(result =>
             {
                 operation.SetResult(new VoidResult());
@@ -85,5 +113,6 @@ namespace Google.Play.Review
             });
             return operation;
         }
+#endif
     }
 }

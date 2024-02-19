@@ -10,7 +10,6 @@ using TMPro;
 using System.Collections;
 using System.Collections.Generic;
 using GoogleMobileAds.Api;
-using GoogleMobileAds.Placement;
 using static SpadeGameState;
 
 public class GamePlay : MonoBehaviour {
@@ -80,28 +79,6 @@ public class GamePlay : MonoBehaviour {
             txtObject.GetComponent<Text>().text = (int.Parse(txtObject.GetComponent<Text>().text) - 1).ToString();
             StartCoroutine(increaseToIEnum(txtObject, number, delay));
         }        
-
-    }
-
-    public static void setupAds()
-    {
-        List<string> deviceIds = new List<string>();
-        deviceIds.Add("");
-        RequestConfiguration requestConfiguration = new RequestConfiguration.Builder().SetTestDeviceIds(deviceIds).build();
-        MobileAds.SetRequestConfiguration(requestConfiguration);
-        MobileAds.SetiOSAppPauseOnBackground(true);
-        MobileAds.Initialize((initStatus) => {
-            DebugLog.Log("Initialized MobileAds with status " + initStatus);
-
-            if (AdManager.isInterstitialAdEnabled())
-            {
-                InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
-                interstitialAd.LoadAd();
-            }
-
-        });
-
-
 
     }
 
@@ -331,8 +308,6 @@ public class GamePlay : MonoBehaviour {
     public void Start() {
 
         Application.targetFrameRate = 60;
-
-        setupAds();
 
         //All GameObject resolution adjustmentbased on screen size.
         AdjustGameObjectResolution.adjust();
@@ -747,8 +722,9 @@ public class GamePlay : MonoBehaviour {
             //updateBiddingComplete(callbreakMatchState.getCurrentGameState());
             if (AdManager.isBannerAdEnabled())
             {
-                BannerAdGameObject bannerAd = MobileAds.Instance.GetAd<BannerAdGameObject>("BannerAd");
-                bannerAd.LoadAd();
+                GameObject.Find("ScriptEmpty").GetComponent<AdManager>().LoadAd();
+                //BannerAdGameObject bannerAd = MobileAds.Instance.GetAd<BannerAdGameObject>("BannerAd");
+                //bannerAd.LoadAd();
             }
         }
         if (notificationStatus.Equals(SpadeMatchState.NotificationStatus.MATCH_COMPLETE)) {
@@ -1158,7 +1134,8 @@ public class GamePlay : MonoBehaviour {
                 GameObject bidTextObj = GameObject.Find(PlayerPositionHelper.getName(pos).ToLower() + "bidval");
 
                 int bid = biddingData.getBidAmount(pos);        
-                bidTextObj.GetComponent<Text>().text = "BID " + bid.ToString();
+                //bidTextObj.GetComponent<Text>().text = "BID " + bid.ToString();
+                bidTextObj.GetComponent<Text>().text =  bid.ToString();
                 float initialDelay = 0.6f;
                 GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().scaleUpAndDown(bidTextObj , .3f, 0f, 1.5f);
 
@@ -1184,7 +1161,8 @@ public class GamePlay : MonoBehaviour {
         GameObject bidTextObj = GameObject.Find(PlayerPositionHelper.getName(biddingData.currentBiddingPosition).ToLower() + "bidval");
 
         int bid = biddingData.getBidAmount(biddingData.currentBiddingPosition);        
-        bidTextObj.GetComponent<Text>().text = "BID " + bid.ToString();
+        //bidTextObj.GetComponent<Text>().text = "BID " + bid.ToString();
+        bidTextObj.GetComponent<Text>().text = bid.ToString();
 
         //bidBubbleObj.GetComponent<Image>().enabled = true;
         //bidTextObj.GetComponent<Text>().enabled = true;

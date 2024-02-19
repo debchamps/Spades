@@ -1,4 +1,4 @@
-﻿// Copyright 2019 Google LLC
+// Copyright 2019 Google LLC
 //
 // Licensed under the Apache License, Version 2.0 (the "License");
 // you may not use this file except in compliance with the License.
@@ -13,6 +13,7 @@
 // limitations under the License.
 
 using System;
+using UnityEngine;
 
 namespace Google.Play.Core.Internal
 {
@@ -24,7 +25,7 @@ namespace Google.Play.Core.Internal
     /// The return type of the proxied Play Core Task.
     /// Must be a primitive type (e.g. bool, int, or float) or an AndroidJavaObject.
     /// </typeparam>
-    public class PlayCoreOnSuccessListener<TAndroidJava> : PlayCoreJavaProxy
+    public class PlayCoreOnSuccessListener<TAndroidJava> : AndroidJavaProxy
     {
         /// <summary>
         /// Triggers when the associated Play Core Task succeeds.

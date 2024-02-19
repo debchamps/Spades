@@ -305,27 +305,12 @@ public class BrayCardHelper {
             return null;
         }
 
-        if (currRound.roundNumber == 1 && currRound.moveNumber == 0)
+        if (currRound.moveNumber == 0)
         {
             return new WarningEntity("<sprite=3>  NOT broken yet", "Cards/" + "icon");
         }
 
-        /*
-        if(brayGameState.gameVariant.Equals(GameVariant.HEARTS)) {
-            if(currRound.moveNumber == 0) {
-                if(currRound.roundNumber == 1) {
-                    return new WarningEntity("Start with '2' of <sprite=1>", "Cards/"  + "icon");
 
-                } else if(card.suit.Equals("H")) {
-                    return new WarningEntity("<sprite=0>  NOT broken yet", "Cards/"  + "icon");
-
-                } else {
-                    return null;
-                }
-
-            }
-
-        }*/
 
         string roundSuit = currRound.moves[0].card.suit;
 

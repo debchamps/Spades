@@ -16,13 +16,14 @@ public class AppReview : MonoBehaviour
 
 
 
-    void Start()
+    private void Awake()
     { 
+        
         #if UNITY_ANDROID 
 
         _reviewManager = new ReviewManager();
         #endif
-
+           
          //StartCoroutine(review());
         
     }

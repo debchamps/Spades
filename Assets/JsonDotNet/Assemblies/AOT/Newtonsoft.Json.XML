@@ -3431,7 +3431,7 @@
         </member>
         <member name="F:Newtonsoft.Json.Linq.JTokenType.Boolean">
             <summary>
-            A boolean value.
+            A bool value.
             </summary>
         </member>
         <member name="F:Newtonsoft.Json.Linq.JTokenType.Null">
@@ -6446,12 +6446,12 @@
         </member>
         <member name="F:Newtonsoft.Json.JsonConvert.True">
             <summary>
-            Represents JavaScript's boolean value true as a string. This field is read-only.
+            Represents JavaScript's bool value true as a string. This field is read-only.
             </summary>
         </member>
         <member name="F:Newtonsoft.Json.JsonConvert.False">
             <summary>
-            Represents JavaScript's boolean value false as a string. This field is read-only.
+            Represents JavaScript's bool value false as a string. This field is read-only.
             </summary>
         </member>
         <member name="F:Newtonsoft.Json.JsonConvert.Null">
