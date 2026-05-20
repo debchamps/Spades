@@ -1,0 +1,67 @@
+{
+  "game_resuming": "Jogo \nRetomando",
+  "starting_new_match": "Iniciando \nNova Partida",
+  "bidding": "Apostando",
+  "score_of": "{0} de {1}",
+
+  "round_number": "Rodada {0}",
+  "match_complete": "Partida Completa",
+  "scoreboard_footer": "* A partida termina quando um jogador atinge {0}",
+
+  "our_team": "Nosso Time",
+  "opponent": "Adversario",
+
+  "spades_not_broken": "<sprite=3>  NAO foram quebradas",
+  "must_play_suit": "Voce deve jogar  {0}",
+  "must_play_higher": "Voce deve jogar uma carta maior",
+  "must_trump_with_spade": "Voce deve trunfar com",
+  "must_play_higher_spade": "Voce deve jogar um trunfo MAIOR ",
+
+  "spades_broken_by": "<sprite=3> Espadas quebradas por : {0}",
+  "no_passing_round": "NAO ha passe nesta rodada",
+
+  "nil_busted_text": "Falhou",
+  "nil_busted_for": "Nil falhou para {0}",
+  "nil_bid_succeeded": "Aposta NIL bem-sucedida por : {0}",
+  "nil_penalty_plus": "+{0}",
+
+  "sandbag_penalty_for": "Penalidade de saco de areia -50 para {0}",
+  "our_team_short": "Nosso time",
+
+  "pass_right": "Passar a Direita",
+  "pass_opposite": "Passar ao Oposto",
+  "pass_left": "Passar a Esquerda",
+
+  "share_subject": "Spades",
+  "share_description": "Um dos melhores jogos de {0}.",
+
+  "howtoplay_objective": "Objetivo",
+  "howtoplay_bidding": "Apostas",
+  "howtoplay_nil_bid": "Aposta NIL",
+  "howtoplay_scoring": "Pontuacao",
+  "howtoplay_gameplay": "Jogo",
+  "howtoplay_gameplay_trump": "Jogo (Trunfo)",
+  "howtoplay_sandbag_penalty": "Penalidade de Saco de Areia",
+
+  "achievement_win_matches": "Vencer 500 partidas de Spades",
+  "achievement_nil_win": "Vencer 100 rodadas chamando NIL",
+  "achievement_bust_opponent_nil": "Quebrar NIL do adversario 30 vezes",
+  "achievement_10_plus_target": "Atingir meta de 10 ou mais 50 vezes",
+  "achievement_double_nil": "Ambos parceiros atingindo NIL juntos 5 vezes",
+
+  "select_language": "Selecionar Idioma",
+
+  "help.page1.body": "<b>Spades</b> é um jogo de cartas de vazas em duplas para 4 jogadores. Os parceiros sentam-se um de frente ao outro.\n\n<color=#BDE0FF><b>Objetivo</b></color>\nSer a primeira dupla a atingir <b>500 pontos</b>. Ganhe pelo menos tantas vazas quanto a soma das apostas da sua equipe em cada rodada.",
+
+  "help.page2.body": "<color=#BDE0FF><b>Apostas em Dupla</b></color>\nCada jogador aposta quantas vazas espera ganhar. As apostas de ambos os parceiros são somadas como objetivo combinado da equipe.\n\n\u2022 Aposta mínima: <b>0</b> (Aposta NIL — veja próxima página)\n\u2022 Aposta máxima: <b>13</b>\n\u2022 As apostas são definitivas — não podem ser alteradas",
+
+  "help.page3.body": "<color=#BDE0FF><b>Aposta NIL</b></color>\nApostar <b>NIL (0)</b> significa que você pretende ganhar <b>zero</b> vazas nesta rodada.\n\n<color=#BDE0FF><b>Bônus/Penalidade NIL</b></color>\nNIL bem-sucedido: <b>+100 pontos</b>\nNIL falhou: <b>-100 pontos</b> (seu parceiro continua jogando pela própria aposta)\n\nNIL cego (apostar antes de ver as cartas): <b>+200 / -200</b>",
+
+  "help.page4.body": "<color=#BDE0FF><b>Aposta Atingida</b></color>\nGanhou \u2265 aposta combinada:\nPontuação = <b>aposta \u00d7 10</b> + vazas extras (\"sacolas\")\n\n<color=#BDE0FF><b>Aposta Perdida</b></color>\nGanhou < aposta combinada:\nPontuação = <b>\u2212aposta \u00d7 10</b>\n\n<color=#BDE0FF><b>Sacolas</b></color>\nCada vaza extra = <b>+1 sacola</b>. A cada 10 sacolas = <b>\u2212100 pontos</b>.",
+
+  "help.page5.body": "<color=#BDE0FF><b>Jogando Vazas</b></color>\nVocê <b>deve seguir o naipe</b> se tiver uma carta do naipe liderado.\n\nSe não tiver cartas do naipe liderado, pode jogar qualquer carta — incluindo uma Espada.\n\n<color=#BDE0FF><b>Liderar com Espadas</b></color>\nVocê não pode liderar com uma Espada até que as Espadas tenham sido quebradas (uma Espada foi jogada em uma vaza anterior).",
+
+  "help.page6.body": "<color=#BDE0FF><b>Espadas São Sempre Trunfo</b></color>\nUma Espada vence qualquer carta que não seja Espada, independentemente do valor.\n\nSe várias Espadas forem jogadas, a <b>Espada mais alta vence</b>.\n\n<color=#BDE0FF><b>Valores das Cartas (Maior para Menor)</b></color>\nA  >  K  >  Q  >  J  >  10  >  9  >  8  >  7  >  6  >  5  >  4  >  3  >  2",
+
+  "help.page7.body": "<color=#BDE0FF><b>Penalidade de Sacolas</b></color>\nVazas extras (vazas além da sua aposta) contam como <b>sacolas</b>.\n\nQuando uma equipe acumula <b>10 sacolas</b>:\n\u2022 Penalidade de <b>\u2212100 pontos</b>\n\u2022 O contador de sacolas é zerado\n\n<color=#BDE0FF><b>Estratégia</b></color>\nEvite ganhar muitas vazas extras — sacolas podem custar o jogo ao longo do tempo."
+}

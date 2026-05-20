@@ -8,13 +8,13 @@ public class ShareScript : MonoBehaviour  {
     public string desc;
 
     public void share() {
-        new NativeShare().SetSubject("Spades").SetText(description()).Share();
+        new NativeShare().SetSubject(LocalizationManager.Instance.Get("share_subject")).SetText(description()).Share();
 
     }
 
     public string description() {
         //return "One of the best " + game + " game." + "\n\n Android : " +  getAndroidLink() + "\n\n IOS : " + getAndroidLink();
-        return "One of the best " + game + " game." + "\n\n Android : " +  getAndroidLink();
+        return LocalizationManager.Instance.Get("share_description", game) + "\n\n Android : " +  getAndroidLink();
     }
 
 

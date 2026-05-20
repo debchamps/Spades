@@ -19,6 +19,13 @@ public class MovePlayedCard : MonoBehaviour
     ConfigManager configManager = new ConfigManager();
     PlayerPositionHelper playerPositionHelper = new PlayerPositionHelper();
 
+    private Dictionary<PlayerPosition, Transform> _playPosTfm = new Dictionary<PlayerPosition, Transform>();
+    private Dictionary<PlayerPosition, Transform> _scoreGroupTfm = new Dictionary<PlayerPosition, Transform>();
+    private Transform _northCardTfm;
+    private Transform _eastCardTfm;
+    private Transform _westCardTfm;
+    private Dictionary<string, Sprite> _spriteCache = new Dictionary<string, Sprite>();
+
 
     void initiate()
     {
@@ -32,6 +39,24 @@ public class MovePlayedCard : MonoBehaviour
         playerCardStaringFinalPositionMap[PlayerPosition.EAST] = new Vector3(1.4f, 4.4f, -10f);
         playerCardStaringFinalPositionMap[PlayerPosition.NORTH] = new Vector3(-0.1f, 5.0f, -10f);
         playerCardStaringFinalPositionMap[PlayerPosition.WEST] = new Vector3(-1.6f, 4.4f, -10f);
+
+        // Cache play position targets
+        _playPosTfm.Clear();
+        GameObject wp = GameObject.Find("playedCard/playerwestpos");  if (wp != null) _playPosTfm[PlayerPosition.WEST]  = wp.transform;
+        GameObject ep = GameObject.Find("playereastpos");             if (ep != null) _playPosTfm[PlayerPosition.EAST]  = ep.transform;
+        GameObject np = GameObject.Find("playedCard/playernorthpos"); if (np != null) _playPosTfm[PlayerPosition.NORTH] = np.transform;
+        GameObject sp = GameObject.Find("playedCard/playersouthpos"); if (sp == null) sp = GameObject.Find("playerSouthPos"); if (sp != null) _playPosTfm[PlayerPosition.SOUTH] = sp.transform;
+
+        // Cache score group transforms
+        foreach (PlayerPosition pos in PlayerPositionHelper.PLAYER_POSITIONS) {
+            GameObject sg = GameObject.Find("player" + PlayerPositionHelper.getName(pos).ToLower() + "scoregroup");
+            if (sg != null) _scoreGroupTfm[pos] = sg.transform;
+        }
+
+        // Cache other-player card transforms
+        _northCardTfm = GameObject.Find("playedCard/playernorthcard")?.transform;
+        _eastCardTfm  = GameObject.Find("playedCard/playereastcard") ?.transform;
+        _westCardTfm  = GameObject.Find("playedCard/playerwestcard") ?.transform;
 
     }
 
@@ -112,7 +137,7 @@ public class MovePlayedCard : MonoBehaviour
         Debug.Log(" Move Pos " + move.playerPosition + " card: " + move.card.getCardId());
         GameObject cardGameObject = getOtherPlayerCardGameObject(move.playerPosition);
         string path = "Cards/" + move.card.getCardId().ToLower();
-        cardGameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>(path);
+        cardGameObject.GetComponent<Image>().sprite = LoadSprite(path);
         cardGameObject.GetComponent<Image>().enabled = true;
 
     }
@@ -147,9 +172,9 @@ public class MovePlayedCard : MonoBehaviour
 
     public void activateAllCards()
     {
-        GameObject.Find("playedCard/playernorthcard").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
-        GameObject.Find("playedCard/playereastcard").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
-        GameObject.Find("playedCard/playerwestcard").GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        if (_northCardTfm != null) _northCardTfm.GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        if (_eastCardTfm  != null) _eastCardTfm .GetComponent<Image>().color = new Color32(255, 255, 255, 255);
+        if (_westCardTfm  != null) _westCardTfm .GetComponent<Image>().color = new Color32(255, 255, 255, 255);
     }
 
 
@@ -191,32 +216,19 @@ public class MovePlayedCard : MonoBehaviour
 
             GameObject cardGameObject = getOtherPlayerCardGameObject(callbreakMove.playerPosition);
             string path = "Cards/" + callbreakMove.card.getCardId().ToLower();
-            cardGameObject.GetComponent<Image>().sprite = Resources.Load<Sprite>(path);
+            cardGameObject.GetComponent<Image>().sprite = LoadSprite(path);
             cardGameObject.GetComponent<Image>().enabled = true;
-            camera = GameObject.Find("CameraMain").GetComponent<Camera>();
 
-            /*
-            if(callbreakMove.card.suit.Equals("D") && callbreakMove.card.number.Equals("A"))
-            {
-                //var currScale = cardGameObject.transform.localScale;
-                //cardGameObject.transform.localScale = new Vector2(currScale.x * .73f, currScale.y * .85f);
+            if (_scoreGroupTfm.TryGetValue(callbreakMove.playerPosition, out Transform sgTfm))
+                cardGameObject.transform.position = sgTfm.position;
+            else
+                cardGameObject.transform.position = GameObject.Find("player" + PlayerPositionHelper.getName(callbreakMove.playerPosition).ToLower() + "scoregroup").transform.position;
 
-            }
-            */
-            //cardGameObject.transform.position = camera.WorldToScreenPoint(playerCardStartingPositionMap[callbreakMove.playerPosition]);
-            cardGameObject.transform.position = GameObject.Find("player" + PlayerPositionHelper.getName(callbreakMove.playerPosition).ToLower() + "scoregroup").transform.position;
-
-            //float moveTime = 0.3f;
-            //StartCoroutine (MoveTo.MoveOverSeconds(cardGameObject, camera.WorldToScreenPoint(playerCardStaringFinalPositionMap[callbreakMove.playerPosition]), moveTime));
+            cardGameObject.transform.DOKill();
             if (callbreakMove.playerPosition.Equals(PlayerPosition.NORTH) || callbreakMove.playerPosition.Equals(PlayerPosition.WEST) || callbreakMove.playerPosition.Equals(PlayerPosition.EAST))
-                cardGameObject.transform.DOMove(playPosition(callbreakMove.playerPosition), moveTime);
+                cardGameObject.transform.DOMove(playPosition(callbreakMove.playerPosition), moveTime).SetEase(Ease.OutQuad);
             else
                 StartCoroutine(MoveTo.MoveOverSeconds(cardGameObject, playPosition(callbreakMove.playerPosition), moveTime));
-
-
-            //if (callbreakMove.card.suit.Equals("H") && callbreakMove.playerPosition.Equals(PlayerPosition.NORTH))
-            //    AudioManagerScript.play(AudioClipType.PLAY_CARD);
-
 
             SpadeGameState gameState = GamePlay.matchState.getCurrentGameState();
 
@@ -237,7 +249,10 @@ public class MovePlayedCard : MonoBehaviour
 
     Vector3 playPosition(PlayerPosition playerPosition)
     {
+        if (_playPosTfm.TryGetValue(playerPosition, out Transform t) && t != null)
+            return t.position;
 
+        // Fallback: use original Find logic for any positions not cached
         float height = UnityHelper.Get_Height(GameObject.Find("playedCard"));
         float width = UnityHelper.Get_Width(GameObject.Find("playedCard"));
 
@@ -249,22 +264,16 @@ public class MovePlayedCard : MonoBehaviour
 
         if (playerPosition.Equals(PlayerPosition.WEST))
         {
-
-
             posX = GameObject.Find("playedCard").transform.position.x - width / 2 + cardWidth / 2;
             posY = GameObject.Find("playedCard").transform.position.y - height / 2 - cardHeight / 2;
-
             return GameObject.Find("playedCard/playerwestpos").transform.position;
-
         }
 
         if (playerPosition.Equals(PlayerPosition.EAST))
         {
             posX = GameObject.Find("playedCard").transform.position.x + width;
             posY = GameObject.Find("playedCard").transform.position.y - height / 2 - cardHeight / 2;
-
             return GameObject.Find("playereastpos").transform.position;
-
         }
 
         if (playerPosition.Equals(PlayerPosition.NORTH))
@@ -272,11 +281,17 @@ public class MovePlayedCard : MonoBehaviour
             posX = GameObject.Find("playedCard").transform.position.x;
             posY = GameObject.Find("playedCard").transform.position.y - height - cardHeight;
             return GameObject.Find("playedCard/playernorthpos").transform.position;
-
         }
 
         return new Vector3(posX, posY, 0);
+    }
 
+    private Sprite LoadSprite(string path)
+    {
+        if (_spriteCache.TryGetValue(path, out Sprite cached)) return cached;
+        Sprite sp = Resources.Load<Sprite>(path);
+        if (sp != null) _spriteCache[path] = sp;
+        return sp;
     }
 
 
@@ -466,36 +481,26 @@ public class MovePlayedCard : MonoBehaviour
 
         yield return new WaitForSeconds(.2f);
 
-        cardGameObject1.transform.DOMove(moveLocation, winningMoveAnimationTime);//.SetEase(Ease.InBack);
-        //cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime).SetEase(Ease.InBack);
-        cardGameObject2.transform.DOMove(moveLocation, winningMoveAnimationTime);//.SetEase(Ease.InBack);
-        cardGameObject3.transform.DOMove(moveLocation, winningMoveAnimationTime);//.SetEase(Ease.InBack);
-        cardGameObject4.transform.DOMove(moveLocation, winningMoveAnimationTime)//.SetEase(Ease.InBack).
-        .OnComplete(activateAllCards);
+        cardGameObject1.transform.DOKill();
+        cardGameObject2.transform.DOKill();
+        cardGameObject3.transform.DOKill();
+        if (cardGameObject4 != null) cardGameObject4.transform.DOKill();
 
-        Vector3 initalScale = cardGameObject1.transform.localScale;
+        Sequence winSeq = DOTween.Sequence();
+        winSeq.Join(cardGameObject1.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack));
+        winSeq.Join(cardGameObject2.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack));
+        winSeq.Join(cardGameObject3.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack));
+        if (cardGameObject4 != null)
+            winSeq.Join(cardGameObject4.transform.DOMove(moveLocation, winningMoveAnimationTime).SetEase(Ease.InBack));
+        winSeq.OnComplete(activateAllCards);
+        winSeq.Play();
 
-
-        yield return new WaitForSeconds(winningMoveAnimationTime /3);
-
-        //cardGameObject1.transform.DOScale(Vector3.zero, winningMoveAnimationTime*2/3).SetEase(Ease.InExpo);
-        //cardGameObject2.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
-        //cardGameObject3.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
-        //cardGameObject4.transform.DOScale(Vector3.zero, winningMoveAnimationTime * 2 / 3).SetEase(Ease.InExpo);
-
-
-        yield return new WaitForSeconds(winningMoveAnimationTime );
+        yield return new WaitForSeconds(winningMoveAnimationTime);
 
         cardGameObject1.transform.position = OUT_OF_SCREEN_POS;
         cardGameObject2.transform.position = OUT_OF_SCREEN_POS;
         cardGameObject3.transform.position = OUT_OF_SCREEN_POS;
-        cardGameObject4.transform.position = OUT_OF_SCREEN_POS;
-
-
-        cardGameObject1.transform.localScale = initalScale;
-        cardGameObject2.transform.localScale = initalScale;
-        cardGameObject3.transform.localScale = initalScale;
-        cardGameObject4.transform.localScale = initalScale;
+        if (cardGameObject4 != null) cardGameObject4.transform.position = OUT_OF_SCREEN_POS;
 
     }
 
@@ -524,7 +529,7 @@ public class MovePlayedCard : MonoBehaviour
 
 
 
-        GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity("NIL Bid succeded by Player : " + posStr, "C"));
+        GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity(LocalizationManager.Instance.Get("nil_bid_succeeded", posStr), "C"));
 
 
         yield return new WaitForSeconds(.1f);
@@ -559,7 +564,7 @@ public class MovePlayedCard : MonoBehaviour
             {
                 obj.GetComponent<Image>().sprite = Resources.Load<Sprite>("cardgamecommon/circle_custom");
                 obj.GetComponent<Image>().color = POSITIVE_COLOR;
-                txtView.GetComponent<Text>().text = "+" + matchState.getCurrentGameState().nilPenalty().ToString();
+                txtView.GetComponent<Text>().text = LocalizationManager.Instance.Get("nil_penalty_plus", matchState.getCurrentGameState().nilPenalty().ToString());
             }
             else
             {

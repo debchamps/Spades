@@ -7,33 +7,32 @@ using DG.Tweening;
 using System.Collections;
 using System.Collections.Generic;
 public class AnimationUtil {
+    private static Image _darkBkg;
+    private static Dictionary<int, Image> _darkBkgNumbered = new Dictionary<int, Image>();
     public static void scaleUpAndDown(GameObject obj, float time, float initialDelay, float scaleFactor) {
 
         Sequence sequence=  DOTween.Sequence();
 
         sequence.AppendInterval(initialDelay);
-        sequence.Append(obj.transform.DOScale(scaleFactor, time/2));
-        sequence.Append(obj.transform.DOScale(1.0f/scaleFactor, time/2));
+        sequence.Append(obj.transform.DOScale(scaleFactor, time/2).SetEase(Ease.OutCubic));
+        sequence.Append(obj.transform.DOScale(1.0f/scaleFactor, time/2).SetEase(Ease.InCubic));
         sequence.Play();
 
     }
 
 
     public static void openDialogue(GameObject obj, float scaleTo, float animateTime) {
-        
+        obj.transform.DOKill();
         var increaseScale = scaleTo * 1.05f;
-        Sequence sequence=  DOTween.Sequence();
-
-        obj.transform.DOScale(scaleTo, animateTime).SetEase(Ease.OutBack);
-
-        //sequence.Append(obj.transform.DOScale(increaseScale, animateTime * .85f));
-        //sequence.Append(obj.transform.DOScale(scaleTo, animateTime * .15f));
-        //sequence.Play();
-       
+        Sequence sequence = DOTween.Sequence();
+        sequence.Append(obj.transform.DOScale(increaseScale, animateTime * .75f).SetEase(Ease.OutQuad));
+        sequence.Append(obj.transform.DOScale(scaleTo,       animateTime * .25f).SetEase(Ease.InOutSine));
+        sequence.Play();
     }
 
     public static void closeDialogue(GameObject obj)
     {
+        obj.transform.DOKill();
         obj.transform.DOScale(new Vector3(0f, 0f, 1f), .25f).SetEase(Ease.InBack);
         AnimationUtil.closeDarkBkg();
 
@@ -41,6 +40,7 @@ public class AnimationUtil {
 
     public static void closeDialogue(GameObject obj, float animateTime)
     {
+        obj.transform.DOKill();
         obj.transform.DOScale(new Vector3(0f, 0f, 1f), animateTime).SetEase(Ease.InBack);
         AnimationUtil.closeDarkBkg();
 
@@ -61,11 +61,11 @@ public class AnimationUtil {
         float currentY = obj.transform.position.y;
 
         for(int i=0;i<noOfMovement;i++) {
-            sequence.Append(obj.transform.DOMoveY(currentY + amount, movementTime));
-            sequence.Append(obj.transform.DOMoveY(currentY, movementTime));
-            sequence.Append(obj.transform.DOMoveY(currentY-amount, movementTime));
-            sequence.Append(obj.transform.DOMoveY(currentY, movementTime));
-            amount = amount/2;            
+            sequence.Append(obj.transform.DOMoveY(currentY + amount, movementTime).SetEase(Ease.OutSine));
+            sequence.Append(obj.transform.DOMoveY(currentY, movementTime).SetEase(Ease.InSine));
+            sequence.Append(obj.transform.DOMoveY(currentY-amount, movementTime).SetEase(Ease.OutSine));
+            sequence.Append(obj.transform.DOMoveY(currentY, movementTime).SetEase(Ease.InSine));
+            amount = amount/2;
         }
         sequence.Play();
     }
@@ -82,22 +82,21 @@ public class AnimationUtil {
 
         sequence.AppendInterval(initialDelay);
 
-        float currentY = obj.transform.position.x;
+        float currentX = obj.transform.position.x;
 
         for(int i=0;i<noOfMovement;i++) {
-            sequence.Append(obj.transform.DOMoveX(currentY + amount, movementTime));
-            sequence.Append(obj.transform.DOMoveX(currentY, movementTime));
-            sequence.Append(obj.transform.DOMoveX(currentY-amount, movementTime));
-            sequence.Append(obj.transform.DOMoveX(currentY, movementTime));
-            amount = amount/2;            
+            sequence.Append(obj.transform.DOMoveX(currentX + amount, movementTime).SetEase(Ease.OutSine));
+            sequence.Append(obj.transform.DOMoveX(currentX, movementTime).SetEase(Ease.InSine));
+            sequence.Append(obj.transform.DOMoveX(currentX-amount, movementTime).SetEase(Ease.OutSine));
+            sequence.Append(obj.transform.DOMoveX(currentX, movementTime).SetEase(Ease.InSine));
+            amount = amount/2;
         }
         sequence.Play();
     }
 
-    public static bool  isClickedOutside(GameObject obj) {
-        List<GameObject> objects = new List<GameObject>();
-        objects.Add(obj);
-        return isClickedOutside(objects);
+    public static bool isClickedOutside(GameObject obj) {
+        bool isInside = RectTransformUtility.RectangleContainsScreenPoint(obj.GetComponent<RectTransform>(), Input.mousePosition, null);
+        return Input.GetMouseButton(0) && !isInside;
     }
 
 
@@ -131,24 +130,30 @@ public class AnimationUtil {
 
 
     public static void openDarkBkg(float animTime) {
-        var darkObj = GameObject.Find("darkbkg").GetComponent<Image>();
-        openBkg(darkObj, animTime);
+        if (_darkBkg == null) { var go = GameObject.Find("darkbkg"); if (go != null) _darkBkg = go.GetComponent<Image>(); }
+        if (_darkBkg != null) openBkg(_darkBkg, animTime);
     }
 
     public static void closeDarkBkg() {
-        var darkObj = GameObject.Find("darkbkg").GetComponent<Image>();
-        closeBkg(darkObj);
+        if (_darkBkg == null) { var go = GameObject.Find("darkbkg"); if (go != null) _darkBkg = go.GetComponent<Image>(); }
+        if (_darkBkg != null) closeBkg(_darkBkg);
     }
 
 
     public static void openDarkBkg(int i, float animTime) {
-        var darkObj = GameObject.Find("darkbkg" + i.ToString()).GetComponent<Image>();
-        openBkg(darkObj, animTime);
+        if (!_darkBkgNumbered.TryGetValue(i, out Image img) || img == null) {
+            var go = GameObject.Find("darkbkg" + i.ToString());
+            if (go != null) { img = go.GetComponent<Image>(); _darkBkgNumbered[i] = img; }
+        }
+        if (img != null) openBkg(img, animTime);
     }
 
     public static void closeDarkBkg(int i) {
-        var darkObj = GameObject.Find("darkbkg"+i.ToString()).GetComponent<Image>();
-        closeBkg(darkObj);
+        if (!_darkBkgNumbered.TryGetValue(i, out Image img) || img == null) {
+            var go = GameObject.Find("darkbkg" + i.ToString());
+            if (go != null) { img = go.GetComponent<Image>(); _darkBkgNumbered[i] = img; }
+        }
+        if (img != null) closeBkg(img);
     }
 
 
@@ -160,12 +165,14 @@ public class AnimationUtil {
         darkObj.enabled = true;
 
         darkObj.DOFade(150f/255, animTime);
+        AudioManagerScript.play(AudioClipType.DEFAULT_NOTIFICATION);
 
     }
 
     public static void closeBkg(Image darkObj)
     {
-        darkObj.DOFade(0f / 255, 0f);
+        darkObj.DOFade(0f, 0.15f);
+        AudioManagerScript.play(AudioClipType.CLOSE);
         darkObj.enabled = false;
     }
 

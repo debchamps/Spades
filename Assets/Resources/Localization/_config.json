@@ -1,0 +1,8 @@
+{
+  "defaultLanguage": "en",
+  "supportedLanguages": [
+    { "code": "en", "displayName": "English", "nativeName": "English", "isRTL": false },
+    { "code": "es", "displayName": "Spanish", "nativeName": "Español", "isRTL": false },
+    { "code": "pt", "displayName": "Portuguese", "nativeName": "Português", "isRTL": false }
+  ]
+}

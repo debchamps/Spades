@@ -31,11 +31,11 @@ public class AchievementManager{
     AchievementDao achievementDao = new AchievementDao();
     StatisticsDao statisticsDao = new StatisticsDao();
 
-    Achievement achievement1 = new Achievement(AchievementKey.NUMBER_WIN, "Win 500 Spade matches", 500, 0);
-    Achievement achievement2 = new Achievement(AchievementKey.NIL_WIN, "Win 100 round after calling NIL", 100, 0);
-    Achievement achievement3 = new Achievement(AchievementKey.BUST_OPPONENT_NIL, "Bust NIL of opponent 30 times", 30, 0);
-    Achievement achievement4 = new Achievement(AchievementKey.ACHIEVE_10_PLUS_TARGET, "Achieve target of 10 or more 50 times", 50, 0);
-    Achievement achievement5 = new Achievement(AchievementKey.DOUBLE_NIL, "Both Partner and Me acheiving NIL together 5 times", 30, 0);
+    Achievement achievement1 = new Achievement(AchievementKey.NUMBER_WIN, LocalizationManager.Instance.Get("achievement_win_matches"), 500, 0);
+    Achievement achievement2 = new Achievement(AchievementKey.NIL_WIN, LocalizationManager.Instance.Get("achievement_nil_win"), 100, 0);
+    Achievement achievement3 = new Achievement(AchievementKey.BUST_OPPONENT_NIL, LocalizationManager.Instance.Get("achievement_bust_opponent_nil"), 30, 0);
+    Achievement achievement4 = new Achievement(AchievementKey.ACHIEVE_10_PLUS_TARGET, LocalizationManager.Instance.Get("achievement_10_plus_target"), 50, 0);
+    Achievement achievement5 = new Achievement(AchievementKey.DOUBLE_NIL, LocalizationManager.Instance.Get("achievement_double_nil"), 30, 0);
 
     //Achievement achievement6 = new Achievement("CALLBREAK_WIN3", "Winnint with more than 5 point margin", 200, 0);
 

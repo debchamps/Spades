@@ -4,7 +4,9 @@
         public static string DEFAULT_NOTIFICATION = "defaultNotification";
         public static string PLAY_CARD = "playCard";
 
-        public static string SHUFFLE_CARD = "shuffleCards";
+        public static string SHUFFLE_CARD = "shuffleCards";       
+        
+         public static string CLOSE = "close";
 
 
     }

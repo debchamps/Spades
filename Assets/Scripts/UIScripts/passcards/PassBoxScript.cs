@@ -64,20 +64,20 @@ public class PassBoxScript : MonoBehaviour
         Debug.Log(TAG + " Player To Pass " + pass);
         GameObject btnObj = GameObject.Find("passcardbtn/buttonText");
         if(pass.Equals(PlayerPosition.EAST)) {
-            btnObj.GetComponent<Text>().text = "Pass Right";
+            btnObj.GetComponent<Text>().text = LocalizationManager.Instance.Get("pass_right");
 
         }
         if(pass.Equals(PlayerPosition.SOUTH)) {
-            //btnObj.GetComponent<Text>().text = "Pass Right";
-            
+            //btnObj.GetComponent<Text>().text = LocalizationManager.Instance.Get("pass_right");
+
         }
         if(pass.Equals(PlayerPosition.NORTH)) {
-            btnObj.GetComponent<Text>().text = "Pass Opposite";
-            
+            btnObj.GetComponent<Text>().text = LocalizationManager.Instance.Get("pass_opposite");
+
         }
         if(pass.Equals(PlayerPosition.WEST)) {
-            btnObj.GetComponent<Text>().text = "Pass Left";
-            
+            btnObj.GetComponent<Text>().text = LocalizationManager.Instance.Get("pass_left");
+
         }
 
         Sequence sequence=  DOTween.Sequence();

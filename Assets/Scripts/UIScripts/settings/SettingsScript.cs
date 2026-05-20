@@ -51,6 +51,8 @@ public class SettingsScript : MonoBehaviour
             GameObject.Find("settingsoverride").transform.localScale = new Vector3(0, 0, 1f);
 
             GameObject.Find("settingsparent").transform.position = new Vector3(Screen.width/2, Screen.height/2, 0);
+            // Language selection disabled — English only.
+            // SettingsLanguageDropdown.Ensure(GameObject.Find("settingsparent").transform);
             //GameObject.Find("settingsparent").transform.DOScale(new Vector3(0.8f,0.8f, 1f),.25f);
 
 
@@ -148,6 +150,10 @@ public class SettingsScript : MonoBehaviour
     public void closeInfo() {
         GameObject.Find("settingsoverride").transform.DOScale(new Vector3(0.0f,0.0f, 1f),.25f);
         AnimationUtil.closeDarkBkg(2);
+    }
+
+    public void openLanguageSelector() {
+        // Language selection disabled — English only.
     }
 
 

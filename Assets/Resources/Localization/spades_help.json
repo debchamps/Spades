@@ -1,0 +1,12 @@
+{
+  "gameId": "spades",
+  "pages": [
+    { "headerKey": "howtoplay_objective",        "contentType": "text", "bodyKey": "help.page1.body" },
+    { "headerKey": "howtoplay_bidding",           "contentType": "text", "bodyKey": "help.page2.body" },
+    { "headerKey": "howtoplay_nil_bid",           "contentType": "text", "bodyKey": "help.page3.body" },
+    { "headerKey": "howtoplay_scoring",           "contentType": "text", "bodyKey": "help.page4.body" },
+    { "headerKey": "howtoplay_gameplay",          "contentType": "text", "bodyKey": "help.page5.body" },
+    { "headerKey": "howtoplay_gameplay_trump",    "contentType": "text", "bodyKey": "help.page6.body" },
+    { "headerKey": "howtoplay_sandbag_penalty",   "contentType": "text", "bodyKey": "help.page7.body" }
+  ]
+}

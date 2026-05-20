@@ -307,7 +307,7 @@ public class BrayCardHelper {
 
         if (currRound.moveNumber == 0)
         {
-            return new WarningEntity("<sprite=3>  NOT broken yet", "Cards/" + "icon");
+            return new WarningEntity(LocalizationManager.Instance.Get("spades_not_broken"), "Cards/" + "icon");
         }
 
 
@@ -318,24 +318,24 @@ public class BrayCardHelper {
 
         if(roundSuitCards.Count >=1 && !card.suit.Equals(roundSuit)) {
 
-            return new WarningEntity("Player have to play  " + suitToSpriteNumMap(roundSuit), "Cards/" + suitToString(roundSuit) + "icon");
+            return new WarningEntity(LocalizationManager.Instance.Get("must_play_suit", suitToSpriteNumMap(roundSuit)), "Cards/" + suitToString(roundSuit) + "icon");
             //return new WarningEntity("   Player have to play", "Cards/" + suitToString(roundSuit) + "icon");
             //return new WarningEntity("Hearts Broken by " + playerPosition, "Cards/" + suitToString("H") + "icon");
             //YOu have to play suited
         }        
         if(roundSuitCards.Count >=1 && card.suit.Equals(roundSuit)) {
             //YOu have to play higher suit than card.
-            return new WarningEntity("Player have to play higher", "Cards/" + suitToString(roundSuit) + "icon");
+            return new WarningEntity(LocalizationManager.Instance.Get("must_play_higher"), "Cards/" + suitToString(roundSuit) + "icon");
         }   
 
         if(roundSuitCards.Count == 0 && !card.suit.Equals("S")) {
-            return new WarningEntity("Player have to trump with", "Cards/" + suitToString("S") + "icon");
+            return new WarningEntity(LocalizationManager.Instance.Get("must_trump_with_spade"), "Cards/" + suitToString("S") + "icon");
             //Have to play a  spade
         }
      
 
         if(roundSuitCards.Count == 0 && card.suit.Equals("S")) {
-             return new WarningEntity("Player have to play HIGHER ", "Cards/" + suitToString("S") + "icon");
+             return new WarningEntity(LocalizationManager.Instance.Get("must_play_higher_spade"), "Cards/" + suitToString("S") + "icon");
            //Have to play a bigger spade
         }
 

@@ -118,6 +118,11 @@ public class DeckDistribution : MonoBehaviour
 
     public  IEnumerator distributeEnumarator(SpadeGameState callbreakGameState) {
 
+        // Invalidate the card-object cache so every lookup in this deal
+        // resolves against the freshly-assigned sprites — not the previous hand.
+        // Without this, stale cache hits leave played cards stranded on screen.
+        GameObjectFinder.InvalidateCardCache();
+
         AudioManagerScript.play(AudioClipType.SHUFFLE_CARD);
 
         List<Card> southCards = callbreakGameState.playerCardMap[PlayerPosition.SOUTH];

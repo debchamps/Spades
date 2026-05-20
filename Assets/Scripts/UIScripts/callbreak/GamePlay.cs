@@ -41,6 +41,8 @@ public class GamePlay : MonoBehaviour {
     static Sequence warningTxtSequence;
 
     public float deltaTime;
+    private Text     _fpsText;
+    private QuitGame _quitGame;
 
     private static string EVENT_PREFIX = "Bray";
 
@@ -86,15 +88,13 @@ public class GamePlay : MonoBehaviour {
 
     void Update()
     {
-        if (Input.GetKey("escape"))
-        {
-            GameObject.Find("ScriptEmpty").GetComponent<QuitGame>().show();
-        }
+        if (Input.GetKey("escape") && _quitGame != null)
+            _quitGame.show();
 
-         deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
-         float fps = 1.0f / deltaTime;
-         GameObject.Find("fps").GetComponent<Text>().text = Mathf.Ceil (fps).ToString() + "aspect : " + DeviceTypeChecker.getAspectRatio().ToString();
-     
+        deltaTime += (Time.deltaTime - deltaTime) * 0.1f;
+        float fps = 1.0f / deltaTime;
+        if (_fpsText != null)
+            _fpsText.text = Mathf.Ceil(fps).ToString() + "aspect : " + DeviceTypeChecker.getAspectRatio().ToString();
     }
 
     public void multiplyLocalScale(GameObject obj, Vector3 scale) {
@@ -143,7 +143,7 @@ public class GamePlay : MonoBehaviour {
 
     public IEnumerator resume() {
         yield return new WaitForSeconds(0f);
-        infoTextAnimation("Game \nResuming");
+        infoTextAnimation(LocalizationManager.Instance.Get("game_resuming"));
 
         yield return new WaitForSeconds(4f);
 
@@ -309,6 +309,8 @@ public class GamePlay : MonoBehaviour {
 
         Application.targetFrameRate = 60;
 
+        LocalizationManager.Instance.Initialize();
+
         //All GameObject resolution adjustmentbased on screen size.
         AdjustGameObjectResolution.adjust();
 
@@ -325,6 +327,9 @@ public class GamePlay : MonoBehaviour {
         CallbreakAudioInit.Init();
         settingsManager.initiateBraySettings();
         BraySettings settings = settingsManager.getBraySettings();
+
+        // Language selection disabled — English only.
+        // LanguageSelectorUI.CheckAndShowLanguagePrompt();
 
         bool shouldResume = shouldResumeMatch();
          //shouldResume = false;
@@ -363,6 +368,10 @@ public class GamePlay : MonoBehaviour {
         GameObject.Find("ScriptEmpty").GetComponent<AchievementScript>().initiate();
         GameObject.Find("settingsparent").transform.localScale = new Vector3(0f, 0f, 1f);
 
+        GameObject fpsGO = GameObject.Find("fps");
+        if (fpsGO != null) _fpsText = fpsGO.GetComponent<Text>();
+        GameObject scriptEmpty = GameObject.Find("ScriptEmpty");
+        if (scriptEmpty != null) _quitGame = scriptEmpty.GetComponent<QuitGame>();
 
     }
 
@@ -651,7 +660,7 @@ public class GamePlay : MonoBehaviour {
         yield return new WaitForSeconds(.6f);
 
 
-        infoTextAnimation("Starting \nNew Match");
+        infoTextAnimation(LocalizationManager.Instance.Get("starting_new_match"));
         GameObject.Find("ScriptEmpty").GetComponent<SeatSwitcher>().setToPlayerNames();
 
 
@@ -801,8 +810,8 @@ public class GamePlay : MonoBehaviour {
 
         Debug.Log("In initGameScore with status: " + matchState.getCurrentGameState().gameStatus);
         if(matchState.getCurrentGameState().gameStatus.Equals(SpadeGameState.GameStatus.BIDDING)) {
-            GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("team1score/scoretxt")  , "Bidding", 0f);
-            GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("team2score/scoretxt")  , "Bidding", 0f);
+            GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("team1score/scoretxt")  , LocalizationManager.Instance.Get("bidding"), 0f);
+            GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("team2score/scoretxt")  , LocalizationManager.Instance.Get("bidding"), 0f);
 
         } else {
             GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("team1score/scoretxt")  , getScoreString(matchState,PlayerPosition.SOUTH), 0.2f);
@@ -824,13 +833,13 @@ public class GamePlay : MonoBehaviour {
         
         if(playerPosition.Equals(PlayerPosition.SOUTH) || playerPosition.Equals(PlayerPosition.NORTH)) {
 
-            return gameState.getAchieved(1) + " of " + gameState.getTarget(1);
+            return LocalizationManager.Instance.Get("score_of", gameState.getAchieved(1), gameState.getTarget(1));
 
             //return callbreakMatchState.getCurrentGameState().team1Score.ToString();
 
 
         } else {
-            return gameState.getAchieved(2) + " of " + gameState.getTarget(2);
+            return LocalizationManager.Instance.Get("score_of", gameState.getAchieved(2), gameState.getTarget(2));
 
             //return callbreakMatchState.getCurrentGameState().team2Score.ToString();
         }
@@ -1025,7 +1034,7 @@ public class GamePlay : MonoBehaviour {
         }
 
         if(gameState!= null && gameState.isSpadeBroken() && gameState.getSpadesBrokenCard().getCardId().Equals(callbreakMove.card.getCardId())) {
-                GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity("<sprite=3> Spades broken by : " + callbreakMove.playerPosition, "C"));
+                GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity(LocalizationManager.Instance.Get("spades_broken_by", callbreakMove.playerPosition), "C"));
 
         }
 

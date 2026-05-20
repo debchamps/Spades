@@ -3,7 +3,6 @@ using UnityEngine.UI;
 
 namespace ImageCropperNamespace
 {
-	[SerializeField]
 	public class FontSizeSynchronizer : MonoBehaviour
 	{
 #pragma warning disable 0649

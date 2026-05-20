@@ -89,7 +89,7 @@ public class ScoreboardScript : MonoBehaviour
         }
 
 
-        GameObject.Find("ScoreCardV2/footer").GetComponent<Text>().text = "* Match ends when one player reaches " + callbreakMatchState.gameTarget.ToString();
+        GameObject.Find("ScoreCardV2/footer").GetComponent<Text>().text = LocalizationManager.Instance.Get("scoreboard_footer", callbreakMatchState.gameTarget.ToString());
 
 
         updateScore(callbreakMatchState, gameNumber);
@@ -577,10 +577,10 @@ public class ScoreboardScript : MonoBehaviour
         disableAllPenalty();
 
         //Set the header
-        GameObject.Find("roundNumberText").GetComponent<Text>().text = "Round " + gameNumber.ToString();
+        GameObject.Find("roundNumberText").GetComponent<Text>().text = LocalizationManager.Instance.Get("round_number", gameNumber.ToString());
         // && gameNumber == matchState.getCurrentGameState().getLastCompletedRound().roundNumber
         if(matchState.matchState.Equals(SpadeMatchState.MatchState.COMPLETED) ) {
-            GameObject.Find("roundNumberText").GetComponent<Text>().text = "Match Complete";
+            GameObject.Find("roundNumberText").GetComponent<Text>().text = LocalizationManager.Instance.Get("match_complete");
 
         }
 

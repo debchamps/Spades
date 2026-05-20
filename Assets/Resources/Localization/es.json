@@ -1,0 +1,67 @@
+{
+  "game_resuming": "Juego \nReanudando",
+  "starting_new_match": "Iniciando \nNueva Partida",
+  "bidding": "Apostando",
+  "score_of": "{0} de {1}",
+
+  "round_number": "Ronda {0}",
+  "match_complete": "Partida Completa",
+  "scoreboard_footer": "* La partida termina cuando un jugador alcanza {0}",
+
+  "our_team": "Nuestro Equipo",
+  "opponent": "Oponente",
+
+  "spades_not_broken": "<sprite=3>  NO se han roto",
+  "must_play_suit": "Debes jugar  {0}",
+  "must_play_higher": "Debes jugar una carta mayor",
+  "must_trump_with_spade": "Debes jugar un triunfo con",
+  "must_play_higher_spade": "Debes jugar un triunfo MAYOR ",
+
+  "spades_broken_by": "<sprite=3> Picas rotas por : {0}",
+  "no_passing_round": "NO se pasa en esta ronda",
+
+  "nil_busted_text": "Fallado",
+  "nil_busted_for": "Nil fallado para {0}",
+  "nil_bid_succeeded": "Apuesta NIL lograda por : {0}",
+  "nil_penalty_plus": "+{0}",
+
+  "sandbag_penalty_for": "Penalidad de bolsa de arena -50 para {0}",
+  "our_team_short": "Nuestro equipo",
+
+  "pass_right": "Pasar a la Derecha",
+  "pass_opposite": "Pasar al Frente",
+  "pass_left": "Pasar a la Izquierda",
+
+  "share_subject": "Spades",
+  "share_description": "Uno de los mejores juegos de {0}.",
+
+  "howtoplay_objective": "Objetivo",
+  "howtoplay_bidding": "Apuestas",
+  "howtoplay_nil_bid": "Apuesta NIL",
+  "howtoplay_scoring": "Puntuacion",
+  "howtoplay_gameplay": "Juego",
+  "howtoplay_gameplay_trump": "Juego (Triunfo)",
+  "howtoplay_sandbag_penalty": "Penalidad de Bolsa de Arena",
+
+  "achievement_win_matches": "Ganar 500 partidas de Spades",
+  "achievement_nil_win": "Ganar 100 rondas llamando NIL",
+  "achievement_bust_opponent_nil": "Romper NIL del oponente 30 veces",
+  "achievement_10_plus_target": "Alcanzar objetivo de 10 o mas 50 veces",
+  "achievement_double_nil": "Ambos companeros logrando NIL juntos 5 veces",
+
+  "select_language": "Seleccionar Idioma",
+
+  "help.page1.body": "<b>Spades</b> es un juego de cartas de bazas en parejas para 4 jugadores. Los compañeros se sientan uno frente al otro.\n\n<color=#BDE0FF><b>Objetivo</b></color>\nSer la primera pareja en alcanzar <b>500 puntos</b>. Gana al menos tantas bazas como la suma de las apuestas de tu equipo en cada ronda.",
+
+  "help.page2.body": "<color=#BDE0FF><b>Apuestas en Pareja</b></color>\nCada jugador apuesta cuántas bazas espera ganar. Las apuestas de ambos compañeros se suman como objetivo combinado del equipo.\n\n\u2022 Apuesta mínima: <b>0</b> (Apuesta NIL — ver página siguiente)\n\u2022 Apuesta máxima: <b>13</b>\n\u2022 Las apuestas son vinculantes — no pueden cambiarse",
+
+  "help.page3.body": "<color=#BDE0FF><b>Apuesta NIL</b></color>\nApostar <b>NIL (0)</b> significa que tu objetivo es ganar <b>cero</b> bazas en esta ronda.\n\n<color=#BDE0FF><b>Bonus/Penalidad NIL</b></color>\nNIL exitoso: <b>+100 puntos</b>\nNIL fallido: <b>-100 puntos</b> (tu compañero sigue jugando por su propia apuesta)\n\nNIL ciego (apostar antes de ver las cartas): <b>+200 / -200</b>",
+
+  "help.page4.body": "<color=#BDE0FF><b>Apuesta Lograda</b></color>\nGanaste \u2265 apuesta combinada:\nPuntuación = <b>apuesta \u00d7 10</b> + bazas extra (\"bolsas\")\n\n<color=#BDE0FF><b>Apuesta Fallida</b></color>\nGanaste < apuesta combinada:\nPuntuación = <b>\u2212apuesta \u00d7 10</b>\n\n<color=#BDE0FF><b>Bolsas</b></color>\nCada baza extra = <b>+1 bolsa</b>. Cada 10 bolsas = <b>\u2212100 puntos</b>.",
+
+  "help.page5.body": "<color=#BDE0FF><b>Jugar Bazas</b></color>\n<b>Debes seguir el palo</b> si tienes una carta del palo liderado.\n\nSi no tienes cartas del palo liderado, puedes jugar cualquier carta — incluyendo una Pica.\n\n<color=#BDE0FF><b>Liderar con Picas</b></color>\nNo puedes liderar con una Pica hasta que las Picas se hayan roto (una Pica fue jugada en una baza anterior).",
+
+  "help.page6.body": "<color=#BDE0FF><b>Las Picas Son Siempre Triunfo</b></color>\nUna Pica vence a cualquier carta que no sea Pica, independientemente del rango.\n\nSi se juegan varias Picas, gana la <b>Pica más alta</b>.\n\n<color=#BDE0FF><b>Rangos de Cartas (Mayor a Menor)</b></color>\nA  >  K  >  Q  >  J  >  10  >  9  >  8  >  7  >  6  >  5  >  4  >  3  >  2",
+
+  "help.page7.body": "<color=#BDE0FF><b>Penalidad de Bolsas de Arena</b></color>\nLas bazas extra (bazas más allá de tu apuesta) cuentan como <b>bolsas</b>.\n\nCuando un equipo acumula <b>10 bolsas</b>:\n\u2022 Penalidad de <b>\u2212100 puntos</b>\n\u2022 El contador de bolsas se reinicia a cero\n\n<color=#BDE0FF><b>Estrategia</b></color>\nEvita ganar demasiadas bazas extra — las bolsas pueden costarte el juego con el tiempo."
+}

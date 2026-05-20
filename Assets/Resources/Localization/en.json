@@ -1,0 +1,67 @@
+{
+  "game_resuming": "Game \nResuming",
+  "starting_new_match": "Starting \nNew Match",
+  "bidding": "Bidding",
+  "score_of": "{0} of {1}",
+
+  "round_number": "Round {0}",
+  "match_complete": "Match Complete",
+  "scoreboard_footer": "* Match ends when one player reaches {0}",
+
+  "our_team": "Our Team",
+  "opponent": "Opponent",
+
+  "spades_not_broken": "<sprite=3>  NOT broken yet",
+  "must_play_suit": "Player have to play  {0}",
+  "must_play_higher": "Player have to play higher",
+  "must_trump_with_spade": "Player have to trump with",
+  "must_play_higher_spade": "Player have to play HIGHER ",
+
+  "spades_broken_by": "<sprite=3> Spades broken by : {0}",
+  "no_passing_round": "NO Passing in this Round",
+
+  "nil_busted_text": "Busted",
+  "nil_busted_for": "Nil Busted for {0}",
+  "nil_bid_succeeded": "NIL Bid succeded by Player : {0}",
+  "nil_penalty_plus": "+{0}",
+
+  "sandbag_penalty_for": "Sandbag Penalty -50 for {0}",
+  "our_team_short": "Our team",
+
+  "pass_right": "Pass Right",
+  "pass_opposite": "Pass Opposite",
+  "pass_left": "Pass Left",
+
+  "share_subject": "Spades",
+  "share_description": "One of the best {0} game.",
+
+  "howtoplay_objective": "Objective",
+  "howtoplay_bidding": "Bidding",
+  "howtoplay_nil_bid": "NIL Bid",
+  "howtoplay_scoring": "Scoring",
+  "howtoplay_gameplay": "GamePlay",
+  "howtoplay_gameplay_trump": "GamePlay (Trump)",
+  "howtoplay_sandbag_penalty": "Sandbag Penalty",
+
+  "achievement_win_matches": "Win 500 Spade matches",
+  "achievement_nil_win": "Win 100 round after calling NIL",
+  "achievement_bust_opponent_nil": "Bust NIL of opponent 30 times",
+  "achievement_10_plus_target": "Achieve target of 10 or more 50 times",
+  "achievement_double_nil": "Both Partner and Me acheiving NIL together 5 times",
+
+  "select_language": "Select Language",
+
+  "help.page1.body": "<b>Spades</b> is a 4-player partnership trick-taking card game. Partners sit across from each other.\n\n<color=#BDE0FF><b>Goal</b></color>\nBe the first partnership to reach <b>500 points</b>. Win at least as many tricks as your combined bid each round.",
+
+  "help.page2.body": "<color=#BDE0FF><b>Partnership Bidding</b></color>\nEach player bids how many tricks they expect to win. Both partners' bids are added together as the team's combined target.\n\n\u2022 Minimum bid: <b>0</b> (Nil bid — see next page)\n\u2022 Maximum bid: <b>13</b>\n\u2022 Bids are binding — they cannot change",
+
+  "help.page3.body": "<color=#BDE0FF><b>Nil Bid</b></color>\nBidding <b>Nil (0)</b> means you aim to win <b>zero</b> tricks this round.\n\n<color=#BDE0FF><b>Nil Bonus/Penalty</b></color>\nSuccessful Nil: <b>+100 points</b>\nFailed Nil: <b>-100 points</b> (your partner still plays for their own bid)\n\nBlind Nil (bid before seeing cards): <b>+200 / -200</b>",
+
+  "help.page4.body": "<color=#BDE0FF><b>Made the Bid</b></color>\nWon \u2265 combined bid:\nScore = <b>bid \u00d7 10</b> + extra tricks (\"bags\")\n\n<color=#BDE0FF><b>Missed the Bid</b></color>\nWon < combined bid:\nScore = <b>\u2212bid \u00d7 10</b>\n\n<color=#BDE0FF><b>Bags</b></color>\nEach overtrick = <b>+1 bag</b>. Every 10 bags = <b>\u2212100 points</b>.",
+
+  "help.page5.body": "<color=#BDE0FF><b>Playing Tricks</b></color>\nYou <b>must follow suit</b> if you have a card of the led suit.\n\nIf you have no cards of the led suit, you may play any card — including a Spade.\n\n<color=#BDE0FF><b>Leading Spades</b></color>\nYou cannot lead with a Spade until Spades have been broken (a Spade has been played on a previous trick).",
+
+  "help.page6.body": "<color=#BDE0FF><b>Spades Are Always Trump</b></color>\nA Spade beats any non-Spade card, regardless of rank.\n\nIf multiple Spades are played, the <b>highest Spade wins</b>.\n\n<color=#BDE0FF><b>Card Ranks (High to Low)</b></color>\nA  >  K  >  Q  >  J  >  10  >  9  >  8  >  7  >  6  >  5  >  4  >  3  >  2",
+
+  "help.page7.body": "<color=#BDE0FF><b>Sandbag Penalty</b></color>\nOvertricks (tricks beyond your bid) count as <b>bags</b>.\n\nWhen a team accumulates <b>10 bags</b>:\n\u2022 <b>\u2212100 points</b> penalty\n\u2022 Bag counter resets to zero\n\n<color=#BDE0FF><b>Strategy</b></color>\nAvoid winning too many extra tricks — bags can cost you the game over time."
+}

@@ -94,12 +94,12 @@ public class SandBagEventController : MonoBehaviour
 
         }        
         GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("sandbag" + teamNo.ToString())  , sandBagScore.ToString(), 1.3f);
-        string teamName = "Our team";
+        string teamName = LocalizationManager.Instance.Get("our_team_short");
         if(teamNo == 2) {
-            teamName = "Opponent";
+            teamName = LocalizationManager.Instance.Get("opponent");
         }
 
-        GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity("Sandbag Penalty -50 for " + teamName, ""));
+        GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity(LocalizationManager.Instance.Get("sandbag_penalty_for", teamName), ""));
 
 
         //

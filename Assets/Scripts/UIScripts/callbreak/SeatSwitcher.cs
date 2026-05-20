@@ -71,11 +71,11 @@ public class SeatSwitcher : MonoBehaviour
 
             if (pos.Equals(PlayerPosition.SOUTH) || pos.Equals(PlayerPosition.NORTH))
             {
-                playerSeat.transform.Find("seatLabel/seatName").GetComponent<Text>().text = "Our Team";
+                playerSeat.transform.Find("seatLabel/seatName").GetComponent<Text>().text = LocalizationManager.Instance.Get("our_team");
             }
             else
             {
-                playerSeat.transform.Find("seatLabel/seatName").GetComponent<Text>().text = "Opponent";
+                playerSeat.transform.Find("seatLabel/seatName").GetComponent<Text>().text = LocalizationManager.Instance.Get("opponent");
 
             }
 

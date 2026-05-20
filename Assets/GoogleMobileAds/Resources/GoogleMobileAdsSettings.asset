@@ -11,10 +11,12 @@ MonoBehaviour:
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: a187246822bbb47529482707f3e0eff8, type: 3}
   m_Name: GoogleMobileAdsSettings
-  m_EditorClassIdentifier: 
+  m_EditorClassIdentifier: GoogleMobileAds.Editor::GoogleMobileAds.Editor.GoogleMobileAdsSettings
   adMobAndroidAppId: ca-app-pub-1368766915086140~8777176829
-  adMobIOSAppId: ca-app-pub-1368766915086140~5490508242
-  delayAppMeasurementInit: 0
-  optimizeInitialization: 0
-  optimizeAdLoading: 0
+  adMobIOSAppId:
+  enableKotlinXCoroutinesPackagingOption: 1
+  enableGradleBuildPreProcessor: 1
+  disableOptimizeInitialization: 0
+  disableOptimizeAdLoading: 0
   userTrackingUsageDescription: 
+  userLanguage: en

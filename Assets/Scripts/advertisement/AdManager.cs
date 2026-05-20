@@ -172,7 +172,10 @@ public class AdManager : MonoBehaviour
     {
         List<string> deviceIds = new List<string>();
         deviceIds.Add("");
-        RequestConfiguration requestConfiguration = new RequestConfiguration.Builder().SetTestDeviceIds(deviceIds).build();
+        RequestConfiguration requestConfiguration = new RequestConfiguration
+        {
+            TestDeviceIds = deviceIds
+        };
         MobileAds.SetRequestConfiguration(requestConfiguration);
         MobileAds.SetiOSAppPauseOnBackground(true);
         MobileAds.Initialize((initStatus) => {
