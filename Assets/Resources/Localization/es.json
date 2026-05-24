@@ -25,7 +25,7 @@
   "nil_bid_succeeded": "Apuesta NIL lograda por : {0}",
   "nil_penalty_plus": "+{0}",
 
-  "sandbag_penalty_for": "Penalidad de bolsa de arena -50 para {0}",
+  "sandbag_penalty_for": "Penalidad de bolsa de arena -{0} para {1}",
   "our_team_short": "Nuestro equipo",
 
   "pass_right": "Pasar a la Derecha",

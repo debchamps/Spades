@@ -248,7 +248,8 @@ public class GamePlay : MonoBehaviour {
             //STEP6: Set the other parts.
             bool isGameComplete = matchState.getCurrentGameState().gameStatus.Equals(SpadeGameState.GameStatus.COMPLETED);
             if(nextMovePlayer.Equals(PlayerPosition.SOUTH) && !isGameComplete) {
-
+                // Dim illegal cards so the visual state on resume matches normal gameplay.
+                disablePlayerInvalidCards(matchState);
             } else {
                 try {
                     Debug.Log("Notifying next player to move" + JsonConvert.SerializeObject(matchState));
@@ -667,9 +668,11 @@ public class GamePlay : MonoBehaviour {
         //Few cleanup needs to be done. Score and Move played card.
         matchState = null;
         PlayerPrefs.SetString(GAME_SAVED_JSON, null);
-        PlayerPrefs.Save();  
-       
-        GameObject.Find("ScriptEmpty").GetComponent<MovePlayedCard>().restart();
+        PlayerPrefs.Save();
+
+        // Smooth slide-out animation then hard reset — masks stale cards bleeding
+        // behind the newly dealt hand during the rewarded-ad restart flow.
+        yield return StartCoroutine(GameObject.Find("ScriptEmpty").GetComponent<MovePlayedCard>().smoothRestartTransition());
         stopPlayerWarningAnimation();
 
         startNewMatch();

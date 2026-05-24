@@ -74,10 +74,59 @@ public class MovePlayedCard : MonoBehaviour
 
     public void restart()
     {
-        GameObject.Find("playernorthcard").transform.position = new Vector2(Screen.width * 5, 0);
-        GameObject.Find("playereastcard").transform.position = new Vector2(Screen.width * 5, 0);
-        GameObject.Find("playerwestcard").transform.position = new Vector2(Screen.width * 5, 0);
+        Vector2 offScreen = new Vector2(Screen.width * 5, 0);
 
+        // Kill in-flight tweens + reset the 3 played-card placeholders.
+        string[] placeholders = { "playernorthcard", "playereastcard", "playerwestcard" };
+        foreach (string name in placeholders)
+        {
+            GameObject go = GameObject.Find(name);
+            if (go == null) continue;
+            go.transform.DOKill();
+            go.transform.position = offScreen;
+        }
+
+        // Sweep all 13 hand cards off-screen + clear cardPlayed.
+        for (int i = 1; i <= 13; i++)
+        {
+            GameObject card = GameObject.Find("testCard" + i);
+            if (card == null) continue;
+            card.transform.DOKill();
+            card.transform.position = offScreen;
+            CardScript cs = card.GetComponent<CardScript>();
+            if (cs != null) cs.cardPlayed = false;
+        }
+    }
+
+    /// <summary>
+    /// Smooth visual transition for restart: animates current cards sliding down
+    /// and shrinking before the hard reset, masking the "old cards bleeding behind
+    /// new cards" artifact.
+    /// </summary>
+    public IEnumerator smoothRestartTransition()
+    {
+        float duration = 0.3f;
+
+        string[] placeholders = { "playernorthcard", "playereastcard", "playerwestcard" };
+        foreach (string name in placeholders)
+        {
+            GameObject go = GameObject.Find(name);
+            if (go == null) continue;
+            go.transform.DOKill();
+        }
+
+        float dropY = -Screen.height * 0.4f;
+        for (int i = 1; i <= 13; i++)
+        {
+            GameObject card = GameObject.Find("testCard" + i);
+            if (card == null) continue;
+            card.transform.DOKill();
+            Vector3 target = card.transform.position + new Vector3(0, dropY, 0);
+            card.transform.DOMove(target, duration).SetEase(Ease.InQuad);
+        }
+
+        yield return new WaitForSeconds(duration + 0.05f);
+        restart();
     }
 
     public void resume(SpadeMatchState currMatchState)
@@ -190,7 +239,16 @@ public class MovePlayedCard : MonoBehaviour
         }
         else
         {
-            inactivateOtherPlayerCard(move);
+            // Guard: verify the card at this position is still the one we were asked to
+            // deactivate. A stale coroutine from the previous round can fire after the
+            // next round places a new card at the same position, incorrectly dimming it.
+            GameObject cardGO = GameObject.Find("playedCard/player" +
+                PlayerPositionHelper.getName(move.playerPosition).ToLower() + "card");
+            if (cardGO == null) yield break;
+            Image img = cardGO.GetComponent<Image>();
+            if (img == null || img.sprite == null) yield break;
+            if (!img.sprite.name.ToLower().Equals(move.card.getCardId().ToLower())) yield break;
+            img.color = new Color32(188, 177, 177, 255);
         }
     }
 

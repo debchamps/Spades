@@ -26,11 +26,60 @@ public class SubsequentMove {
     }
 
 
+    /// <summary>
+    /// Real implementation (S1). FOLLOWING a trick when our team has already
+    /// booked. Goal: do NOT win this trick. Strategy:
+    ///   1. If we can follow suit:
+    ///        - if there is a card LOWER than the current winning card,
+    ///          play the HIGHEST such low card (uses up our high follows
+    ///          without winning).
+    ///        - if every card we have in suit beats winningCard, we are
+    ///          forced to win — minimise damage by playing our LOWEST winner.
+    ///   2. If we cannot follow suit (void):
+    ///        - dump a non-spade so we don't accidentally trump in and win;
+    ///        - dump the LOWEST non-spade we own.
+    ///        - if we only own spades, dump the lowest spade we have.
+    /// </summary>
     public Card playToLose(SpadeGameState gameState, PlayerPosition pos) {
+        List<Card> validCards = callbreakCardHelper.validCards(gameState, pos);
+        if (validCards == null || validCards.Count == 0) return null;
 
-        //If I have passed 
+        SpadeRound currRound = gameState.getCurrentRound();
+        if (currRound == null || currRound.moves.Count == 0) {
+            // No moves yet — fall back to first-move-style ducking.
+            callbreakCardHelper.sortByRank(validCards);
+            return validCards[validCards.Count - 1];
+        }
 
-        return null;        
+        SpadeMove winningMove = currRound.findWinningMove();
+        Card winningCard = winningMove != null ? winningMove.card : null;
+        string roundSuit = currRound.roundSuit;
+
+        // 1. Follow suit if we can
+        List<Card> sameSuit = cardHelper.filterBySuit(validCards, roundSuit);
+        if (sameSuit.Count > 0 && winningCard != null) {
+            callbreakCardHelper.sortByRank(sameSuit);   // [0] highest, [last] lowest
+            List<Card> lowerThanWinner = callbreakCardHelper.filterLowerCard(sameSuit, winningCard);
+            if (lowerThanWinner.Count > 0) {
+                // Take the HIGHEST card that still loses — dump our biggest
+                // safe card so we keep our lows for tricks we want to lose later.
+                callbreakCardHelper.sortByRank(lowerThanWinner);
+                return lowerThanWinner[0];
+            }
+            // Forced to win — play the lowest winner.
+            return sameSuit[sameSuit.Count - 1];
+        }
+
+        // 2. Void in led suit. Avoid trumping in.
+        List<Card> spades    = cardHelper.filterBySuit(validCards, "S");
+        List<Card> nonSpades = cardHelper.minus(validCards, spades);
+        if (nonSpades.Count > 0) {
+            callbreakCardHelper.sortByRank(nonSpades);   // sorted high→low
+            return nonSpades[nonSpades.Count - 1];        // lowest
+        }
+        // Only spades left — dump the lowest spade.
+        callbreakCardHelper.sortByRank(spades);
+        return spades[spades.Count - 1];
     }
 
 
@@ -76,12 +125,19 @@ public class SubsequentMove {
 
         int target = gameState.getTarget(teamNo);
 
-        int achieved = gameState.getTricksWon(teamNo);
+        // P3 review fix: bid-aware trick count (excludes busted-nil partner's
+        // tricks, matching SpadeGameState.getScore()'s formula). Using the raw
+        // getTricksWon() can falsely register "we've booked" when scoring
+        // disagrees, causing sandbag-avoidance to trigger early.
+        int achieved = gameState.getEffectiveTricksWon(teamNo);
 
 
         int opponentTarget = gameState.getTarget(otherTeamNo);
 
-        int opponentAchieved = gameState.getTarget(otherTeamNo);
+        // BUGFIX (S1 root cause): previously read getTarget(otherTeamNo) again,
+        // making the `opponentTarget < opponentAchieved` check trivially false
+        // and the sandbag-avoidance branch unreachable. Now bid-aware to match.
+        int opponentAchieved = gameState.getEffectiveTricksWon(otherTeamNo);
 
         /*
         if(gameState.isNil(winningMove.playerPosition) && !gameState.isPlayerNILBusted(winningMove.playerPosition)) {
@@ -114,7 +170,10 @@ public class SubsequentMove {
             if(!gameState.isSandBagEnabled)
                 return playToWin(gameState, pos);
 
-            if(opponentTarget < opponentAchieved) {
+            // Sandbag avoidance (S1): once both teams are at-or-over their bid,
+            // continuing to take tricks only gives US bags. Duck the trick.
+            // If opponents are still under target, keep taking to deny them.
+            if(opponentAchieved >= opponentTarget) {
                 return playToLose(gameState, pos);
             }
 

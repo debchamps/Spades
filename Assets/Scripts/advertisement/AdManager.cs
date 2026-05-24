@@ -112,18 +112,32 @@ public class AdManager : MonoBehaviour
 
 
     /// <summary>
-    /// Shows the interstitial ad.
+    /// Returns true when an interstitial ad is loaded and ready to display.
     /// </summary>
-    public void ShowInterstitialAd()
+    public bool CanShowInterstitial()
+    {
+        return _interstitialAd != null && _interstitialAd.CanShowAd();
+    }
+
+    /// <summary>
+    /// Shows the interstitial ad and invokes <paramref name="onClosed"/> once the player
+    /// dismisses it. If the ad is not ready, <paramref name="onClosed"/> is invoked
+    /// immediately so the game can proceed without blocking.
+    /// </summary>
+    public void ShowInterstitialAd(System.Action onClosed = null)
     {
         if (_interstitialAd != null && _interstitialAd.CanShowAd())
         {
             Debug.Log("Showing interstitial ad.");
+            if (onClosed != null)
+                _interstitialAd.OnAdFullScreenContentClosed += () => onClosed.Invoke();
             _interstitialAd.Show();
+            _interstitialAd = null;   // prevent double-show; next load starts fresh
         }
         else
         {
-            Debug.LogError("Interstitial ad is not ready yet.");
+            Debug.LogError("Interstitial ad is not ready yet — proceeding without ad.");
+            onClosed?.Invoke();       // fallback: advance even without ad
         }
     }
 

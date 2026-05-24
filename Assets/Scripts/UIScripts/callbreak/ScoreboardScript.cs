@@ -341,6 +341,17 @@ public class ScoreboardScript : MonoBehaviour
         enableScoreCard(callbreakMatchState, shouldDisappear);
         if(shouldDisappear) {
             yield return new WaitForSeconds(configManager.callbreakTimingConfig.scoreboardAutoDisappearTime/1000);
+
+            // Guard: if the match completed while this scoreboard was visible
+            // (GAME_COMPLETE notification can arrive before matchState flips to COMPLETED),
+            // upgrade to show the winner board and give the player time to see it.
+            if (GamePlay.matchState != null &&
+                GamePlay.matchState.matchState.Equals(SpadeMatchState.MatchState.COMPLETED))
+            {
+                setMatchComplete(GamePlay.matchState);
+                yield return new WaitForSeconds(4f);
+            }
+
             disableScoreCard();
         }
 
@@ -387,63 +398,43 @@ public class ScoreboardScript : MonoBehaviour
     private void loadAdOnly()
     {
         if (!AdManager.isInterstitialAdEnabled())
-        {
             return;
-        }
 
-        if (!isAdLoaded)
+        AdManager adManager = GameObject.Find("ScriptEmpty").GetComponent<AdManager>();
+        // Use CanShowInterstitial() (the actual ad state) instead of the isAdLoaded flag
+        // so that a previously failed load is retried rather than silently skipped.
+        if (!adManager.CanShowInterstitial())
         {
-            GameObject.Find("ScriptEmpty").GetComponent<AdManager>().LoadInterstitialAd();
-
-            //InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
-            //interstitialAd.LoadAd();
-            isAdLoaded = true;
+            adManager.LoadInterstitialAd();
         }
-        else
-        {
-            //Ad already loaded.
-        }
-
     }
 
     private IEnumerator loadAd()
     {
-
         DebugLog.Log("Loading InterstitialGameEnd");
-        //Wait till The score disappears.
         yield return new WaitForSeconds(0.5f);
 
-        bool loadAdEnabled = AdManager.isInterstitialAdEnabled();
-        if (loadAdEnabled)
+        if (!AdManager.isInterstitialAdEnabled())
         {
-            try
-            {
-
-                DebugLog.Log("Fetched InterstitialGameEnd");
-
-
-                GameObject.Find("ScriptEmpty").GetComponent<AdManager>().ShowInterstitialAd();
-
-                //InterstitialAdGameObject interstitialAd = MobileAds.Instance.GetAd<InterstitialAdGameObject>("Interstitial Ad");
-                //interstitialAd.ShowIfLoaded();
-                //SceneManager.LoadScene("CommonCardScene");
-                isAdLoaded = false;
-
-                DebugLog.Log("Show InterstitialGameEnd");
-
-                GamePlay.startNextMatchStatic();
-            }
-            catch (Exception e)
-            {
-                isAdLoaded = false;
-                DebugLog.Log("Exception in Showing Ad" + e.ToString());
-                Debug.LogException(e, this);
-                GamePlay.startNextMatchStatic();
-            }
-
+            GamePlay.startNextMatchStatic();
+            yield break;
         }
-        else
+
+        try
         {
+            DebugLog.Log("Fetched InterstitialGameEnd");
+            isAdLoaded = false;
+            // startNextMatchStatic() fires inside OnAdFullScreenContentClosed callback
+            // (or immediately as a fallback if the ad is not ready).
+            GameObject.Find("ScriptEmpty").GetComponent<AdManager>()
+                .ShowInterstitialAd(() => GamePlay.startNextMatchStatic());
+            DebugLog.Log("Show InterstitialGameEnd — waiting for player to close ad");
+        }
+        catch (Exception e)
+        {
+            isAdLoaded = false;
+            DebugLog.Log("Exception in Showing Ad" + e.ToString());
+            Debug.LogException(e, this);
             GamePlay.startNextMatchStatic();
         }
     }
@@ -586,10 +577,13 @@ public class ScoreboardScript : MonoBehaviour
 
         //Evaluate NIL Score. Even in extreme edge case show one NIL. 
 
-        string team1NIL = matchState.nilTeam1MatchScorecard[gameNumber]; 
+        string team1NIL = matchState.nilTeam1MatchScorecard[gameNumber];
         bool team1SandBagPenalty = matchState.sandbagTeam1MatchScorecard[gameNumber];
         string team2NIL = matchState.nilTeam2MatchScorecard[gameNumber];
-        bool team2SandBagPenalty = matchState.sandbagTeam1MatchScorecard[gameNumber];
+        // BUGFIX (Codex-found): previously read sandbagTeam1MatchScorecard for
+        // team2 as well, so team2 was shown with team1's sandbag penalty state
+        // (and team2's own penalty was never displayed).
+        bool team2SandBagPenalty = matchState.sandbagTeam2MatchScorecard[gameNumber];
 
 
 

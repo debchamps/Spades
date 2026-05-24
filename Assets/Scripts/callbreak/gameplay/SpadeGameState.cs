@@ -474,6 +474,28 @@ public class SpadeGameState {
         return 100;
     }
 
+    /// <summary>
+    /// Sandbag penalty applied when a team crosses a bag threshold. Mirrors
+    /// nilPenalty(): half-game (target 250) uses −50, standard (target 500)
+    /// uses −100. Per standard Spades rules (Pagat / Hoyle).
+    /// </summary>
+    public int sandbagPenalty() {
+        if (gameTarget == 250)
+            return 50;
+        return 100;
+    }
+
+    /// <summary>
+    /// How many bags a team must accumulate before the next sandbag penalty
+    /// fires. Half-game (target 250) → every 5 bags; standard (500) → every
+    /// 10 bags. The 1:10 ratio with sandbagPenalty() is the standard rule.
+    /// </summary>
+    public int sandbagThreshold() {
+        if (gameTarget == 250)
+            return 5;
+        return 10;
+    }
+
     public void calculateGameScore() {
         
         /*
@@ -511,6 +533,33 @@ public class SpadeGameState {
 
         int achieved = tricksWinnerCount[player1] + tricksWinnerCount[player2];
 
+        return achieved;
+    }
+
+    /// <summary>
+    /// Returns the trick count that actually counts TOWARDS the team's bid
+    /// contract — i.e. excludes tricks won by a partner who bid Nil. This
+    /// matches the formula used in getScore() (lines 529-533): only tricks
+    /// of partners who bid > 0 contribute to "achieved" for the contract.
+    ///
+    /// Added per P3 review feedback. Using getTricksWon() for sandbag-
+    /// avoidance decisions can over-count when a partner bids Nil and
+    /// busts — the busted nil's tricks inflate the team total but DON'T
+    /// satisfy the team's contract, so the AI would falsely conclude
+    /// "we've booked" and start ducking when we actually still need tricks.
+    /// </summary>
+    public int getEffectiveTricksWon(int teamNo) {
+        PlayerPosition player1 = PlayerPosition.SOUTH, player2 = PlayerPosition.NORTH;
+        if (teamNo == 2) {
+            player1 = PlayerPosition.EAST;
+            player2 = PlayerPosition.WEST;
+        }
+
+        int achieved = 0;
+        if (callBreakBidding.callBreakBiddingData.playerBidAmount[player1] > 0)
+            achieved += tricksWinnerCount[player1];
+        if (callBreakBidding.callBreakBiddingData.playerBidAmount[player2] > 0)
+            achieved += tricksWinnerCount[player2];
         return achieved;
     }
 

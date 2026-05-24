@@ -92,14 +92,24 @@ public class SandBagEventController : MonoBehaviour
         } else {
             sandBagScore = GamePlay.matchState.cumulativeSandbagTeam2;
 
-        }        
+        }
         GameObject.Find("ScriptEmpty").GetComponent<GamePlay>().setTextWithDelay(GameObject.Find("sandbag" + teamNo.ToString())  , sandBagScore.ToString(), 1.3f);
         string teamName = LocalizationManager.Instance.Get("our_team_short");
         if(teamNo == 2) {
             teamName = LocalizationManager.Instance.Get("opponent");
         }
 
-        GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(new WarningEntity(LocalizationManager.Instance.Get("sandbag_penalty_for", teamName), ""));
+        // BUGFIX (user-reported): the warning popup used to read a locale
+        // string with the penalty amount hardcoded as "-50", which is the
+        // half-game (250-target) value. For the default 500-target match
+        // the actual deduction is −100, so the UI was wildly inconsistent
+        // with what got applied. The locale strings now use {0} for the
+        // amount and {1} for the team name; we feed the correct value from
+        // the central sandbagPenalty() helper so the message always matches
+        // what hit the scorecard.
+        int penaltyAmount = GamePlay.matchState.getCurrentGameState().sandbagPenalty();
+        GameObject.Find("ScriptEmpty").GetComponent<WarningScript>().showWarningAndDisappear(
+            new WarningEntity(LocalizationManager.Instance.Get("sandbag_penalty_for", penaltyAmount, teamName), ""));
 
 
         //

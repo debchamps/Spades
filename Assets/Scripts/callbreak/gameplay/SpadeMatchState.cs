@@ -373,7 +373,14 @@ public class SpadeMatchState {
                     cumulativeSandbagTeam2 = cumulativeSandbagTeam2 +1;                
                     sandBagScore =  cumulativeSandbagTeam2;                       
                 }
-                if(sandBagScore > 0 && sandBagScore %10 == 0 && sandBagScore == (sandBagTillNow(winningTeam) + 1) * 10) {
+                // BUGFIX (user-reported): the bag-count threshold for the
+                // sandbag penalty also has to scale with the game target.
+                // Standard 500-game: every 10 bags. Half-game 250: every 5.
+                // Previously the threshold was hardcoded to 10, so in a
+                // 250-game the AI team could rack up 9 bags with zero
+                // penalty — half the punishment cycle just never fired.
+                int threshold = game.sandbagThreshold();
+                if(sandBagScore > 0 && sandBagScore % threshold == 0 && sandBagScore == (sandBagTillNow(winningTeam) + 1) * threshold) {
                     getCurrentGameState().isSandbagThisGame = true;
                     SandBagEventController.InvokeSandBagCompleteEvent(winningTeam);
                     if(winningTeam == 1) {
@@ -400,6 +407,31 @@ public class SpadeMatchState {
         team1MatchScore += currGame.team1Score;
         team2MatchScore += currGame.team2Score;
 
+        // ── BUGFIX (Codex-found): apply the standard Spades sandbag penalty.
+        // computeSandBag() correctly detects when a team crosses a bag-count
+        // threshold (sets sandbagTeam*MatchScorecard[gameNumber] = true), but
+        // the actual penalty was never subtracted from the running match
+        // total. Without this, sandbags appear in the UI but cost zero points.
+        //
+        // FOLLOW-UP FIX (user-reported): the penalty must scale with the
+        // game target. Standard 500-target → −100; half-game 250-target →
+        // −50 (matching the nilPenalty() helper's ratio). Previously this
+        // was hardcoded at −100, which would have over-penalised 250-games.
+        if (isSandBagEnabled) {
+            int penalty = currGame.sandbagPenalty();
+            if (sandbagTeam1MatchScorecard.ContainsKey(currGame.gameNumber)
+                && sandbagTeam1MatchScorecard[currGame.gameNumber]) {
+                team1MatchScore -= penalty;
+                Debug.Log(TAG + " Sandbag penalty applied: team1 -" + penalty
+                          + " (game " + currGame.gameNumber + ", target=" + currGame.gameTarget + ")");
+            }
+            if (sandbagTeam2MatchScorecard.ContainsKey(currGame.gameNumber)
+                && sandbagTeam2MatchScorecard[currGame.gameNumber]) {
+                team2MatchScore -= penalty;
+                Debug.Log(TAG + " Sandbag penalty applied: team2 -" + penalty
+                          + " (game " + currGame.gameNumber + ", target=" + currGame.gameTarget + ")");
+            }
+        }
 
         team1ScoreCard[currGame.gameNumber] = currGame.team1Score;
         team2ScoreCard[currGame.gameNumber] = currGame.team2Score;
@@ -413,12 +445,12 @@ public class SpadeMatchState {
         nilTeam1MatchScorecard[currGame.gameNumber] = currGame.getNILStatus(1);
         nilTeam2MatchScorecard[currGame.gameNumber] = currGame.getNILStatus(2);
 
-        //nilMatchScorecard[currGame.gameNumber] 
+        //nilMatchScorecard[currGame.gameNumber]
 
         //update NIL of both team.
         //Update Sandbag of both team.
 
-        
+
     }
 
 

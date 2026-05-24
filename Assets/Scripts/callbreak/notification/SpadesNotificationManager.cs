@@ -7,7 +7,7 @@
 //                 ↳ Reset on every launch — fires only after genuine 7-day absence
 //
 // Self-initialises via [RuntimeInitializeOnLoadMethod] — no scene wiring needed.
-// Android: BigPicture style with banner image.
+// Android: Default style — text and emoji only (no banner image).
 // iOS:     Plain text only (rich image support deferred).
 
 using System;
@@ -27,7 +27,6 @@ public static class SpadesNotificationManager
     private const string ChannelId    = "spades_reminders";
     private const string ChannelName  = "Spades Reminders";
     private const string SmallIconRes = "notify_icon_small";   // res/drawable-hdpi/  (white-on-transparent)
-    private const string BannerRes    = "notif_banner";        // res/drawable-nodpi/ (1024×512 colour banner)
     // NOTE: CustomSound is not exposed on AndroidNotificationChannel in
     // com.unity.mobile.notifications 2.3.2. The sound file (res/raw/spades_notification.ogg)
     // is bundled and can be wired via Edit > Project Settings > Mobile Notifications if needed.
@@ -161,8 +160,6 @@ public static class SpadesNotificationManager
             Title            = LapsedTitle,
             Text             = LapsedBody,
             SmallIcon        = SmallIconRes,
-            LargeIcon        = BannerRes,
-            Style            = NotificationStyle.BigPictureStyle,
             FireTime         = fireTime,
             ShouldAutoCancel = true,
         };
@@ -191,8 +188,6 @@ public static class SpadesNotificationManager
             Title            = title,
             Text             = body,
             SmallIcon        = SmallIconRes,
-            LargeIcon        = BannerRes,
-            Style            = NotificationStyle.BigPictureStyle,
             FireTime         = fireTime,
             ShouldAutoCancel = true,
         };
@@ -215,8 +210,6 @@ public static class SpadesNotificationManager
             Title            = EveningTitle,
             Text             = EveningBody,
             SmallIcon        = SmallIconRes,
-            LargeIcon        = BannerRes,
-            Style            = NotificationStyle.BigPictureStyle,
             FireTime         = fireTime,
             ShouldAutoCancel = true,
         };

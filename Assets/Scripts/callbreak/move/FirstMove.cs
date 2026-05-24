@@ -41,27 +41,46 @@ public class FirstMove {
 
         int target = gameState.getTarget(teamNo);
 
-        int achieved = gameState.getTricksWon(teamNo);
+        // P3 review fix: use the bid-aware effective trick count. The previous
+        // raw `getTricksWon()` includes tricks won by a busted-nil partner —
+        // those tricks DON'T count toward the team's contract per the scoring
+        // formula in SpadeGameState.getScore(), so using the raw total would
+        // make us falsely think we've booked and trigger sandbag-avoidance
+        // while we actually still need tricks to make the contract.
+        int achieved = gameState.getEffectiveTricksWon(teamNo);
 
 
         int opponentTarget = gameState.getTarget(otherTeamNo);
 
-        int opponentAchieved = gameState.getTarget(otherTeamNo);
-        
+        // BUGFIX (S1 root cause): this previously read getTarget(otherTeamNo)
+        // again, making the `opponentTarget < opponentAchieved` check below
+        // always trivially false (target < target) and the sandbag-avoidance
+        // branch unreachable. Now uses the same bid-aware trick count as
+        // `achieved` above so both sides of the comparison are apples-to-apples.
+        int opponentAchieved = gameState.getEffectiveTricksWon(otherTeamNo);
+
 
 
         if(achieved < target) {
             return playToWin(gameState, pos);
         } else {
 
+            // Sandbag avoidance (S1): once we've booked our bid, every extra
+            // trick we take is a bag. Each 10 bags costs −100 — devastating.
+            // We duck (playToLose) whenever:
+            //   • sandbag setting is on AND
+            //   • opponents have ALSO booked (extra tricks don't hurt them) OR
+            //   • we already only need to play out the hand.
             if(!gameState.isSandBagEnabled)
                 return playToWin(gameState, pos);
 
 
-            if(opponentTarget < opponentAchieved) {
+            if(opponentAchieved >= opponentTarget) {
                 return playToLose(gameState, pos);
             }
 
+            // Opponents haven't booked yet: keep taking tricks to deny them
+            // (set-the-opponent strategy).
             return playToWin(gameState, pos);
         }
 
@@ -156,11 +175,53 @@ public class FirstMove {
 
     }
 
+    /// <summary>
+    /// Real implementation (S1). When LEADING and our team has already booked
+    /// our bid, we want to NOT take more tricks (each extra trick is a bag,
+    /// 10 bags = −100). Strategy:
+    ///   1. Lead the LOWEST card of our SHORTEST non-spade suit — short suits
+    ///      are likely to be voids for someone else, who will then win cheaply.
+    ///   2. If we have no non-spades, lead our lowest spade.
+    ///   3. Never lead a high card from a long suit (would win and book a bag).
+    /// Returns the chosen card. Falls back to highest available if no cards.
+    /// </summary>
     public Card playToLose(SpadeGameState gameState, PlayerPosition pos) {
+        List<Card> cards = callbreakCardHelper.validCards(gameState, pos);
+        if (cards == null || cards.Count == 0) return null;
 
-        //If I have passed 
+        // Separate non-spades from spades. Leading spades when sandbagging is
+        // bad because they win frequently.
+        List<Card> spades    = cardHelper.filterBySuit(cards, "S");
+        List<Card> nonSpades = cardHelper.minus(cards, spades);
 
-        return null;        
+        if (nonSpades.Count > 0) {
+            // Group non-spades by suit, find the SHORTEST suit (most likely to
+            // be void in someone's hand → they'll trump it for us → we lose).
+            var bySuit = cardHelper.groupBySuit(nonSpades);
+            List<Card> shortestSuit = null;
+            int shortestLen = int.MaxValue;
+            foreach (var kv in bySuit) {
+                if (kv.Value.Count > 0 && kv.Value.Count < shortestLen) {
+                    shortestLen   = kv.Value.Count;
+                    shortestSuit  = kv.Value;
+                }
+            }
+            if (shortestSuit != null && shortestSuit.Count > 0) {
+                callbreakCardHelper.sortByRank(shortestSuit);
+                // [Count-1] is lowest after sortByRank (descending)
+                return shortestSuit[shortestSuit.Count - 1];
+            }
+        }
+
+        // No non-spades — forced to lead a spade. Pick the lowest.
+        if (spades.Count > 0) {
+            callbreakCardHelper.sortByRank(spades);
+            return spades[spades.Count - 1];
+        }
+
+        // Should be unreachable but stay safe.
+        callbreakCardHelper.sortByRank(cards);
+        return cards[cards.Count - 1];
     }
 
     public Card playMove(SpadeGameState callbreakGameState, PlayerPosition pos) {

@@ -25,7 +25,7 @@
   "nil_bid_succeeded": "NIL Bid succeded by Player : {0}",
   "nil_penalty_plus": "+{0}",
 
-  "sandbag_penalty_for": "Sandbag Penalty -50 for {0}",
+  "sandbag_penalty_for": "Sandbag Penalty -{0} for {1}",
   "our_team_short": "Our team",
 
   "pass_right": "Pass Right",
